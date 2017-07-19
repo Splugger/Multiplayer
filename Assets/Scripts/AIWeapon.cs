@@ -6,7 +6,7 @@ public class AIWeapon : Weapon
 {
     AI ai;
 
-    float range = 3f;
+    float fireRange = 5f;
 
     // Use this for initialization
     public override void Start()
@@ -23,7 +23,7 @@ public class AIWeapon : Weapon
         Vector3 aim = ai.target - transform.position;
         float distance = aim.magnitude;
 
-        if (distance < range)
+        if (distance < fireRange)
         {
             Fire(aim);
         }
