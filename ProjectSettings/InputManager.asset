@@ -20,7 +20,7 @@ InputManager:
     invert: 0
     type: 2
     axis: 0
-    joyNum: 2
+    joyNum: 1
   - serializedVersion: 3
     m_Name: Player 1 Aim Horizontal
     descriptiveName: 
@@ -36,7 +36,7 @@ InputManager:
     invert: 0
     type: 2
     axis: 3
-    joyNum: 2
+    joyNum: 1
   - serializedVersion: 3
     m_Name: Player 2 Aim Horizontal
     descriptiveName: 
@@ -52,7 +52,7 @@ InputManager:
     invert: 0
     type: 2
     axis: 3
-    joyNum: 3
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Player 2 Horizontal
     descriptiveName: 
@@ -68,7 +68,7 @@ InputManager:
     invert: 0
     type: 2
     axis: 0
-    joyNum: 3
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Player 1 Vertical
     descriptiveName: 
@@ -84,7 +84,7 @@ InputManager:
     invert: 1
     type: 2
     axis: 1
-    joyNum: 2
+    joyNum: 1
   - serializedVersion: 3
     m_Name: Player 1 Aim Vertical
     descriptiveName: 
@@ -100,7 +100,7 @@ InputManager:
     invert: 1
     type: 2
     axis: 4
-    joyNum: 2
+    joyNum: 1
   - serializedVersion: 3
     m_Name: Player 2 Aim Vertical
     descriptiveName: 
@@ -116,7 +116,7 @@ InputManager:
     invert: 1
     type: 2
     axis: 4
-    joyNum: 3
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Player 2 Vertical
     descriptiveName: 
@@ -132,9 +132,41 @@ InputManager:
     invert: 1
     type: 2
     axis: 1
-    joyNum: 3
+    joyNum: 2
   - serializedVersion: 3
     m_Name: Player 1 Fire1
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick 1 button 5
+    altNegativeButton: 
+    altPositiveButton: mouse 0
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 1
+  - serializedVersion: 3
+    m_Name: Player 1 Dodge
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick 1 button 1
+    altNegativeButton: 
+    altPositiveButton: mouse 0
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 1
+  - serializedVersion: 3
+    m_Name: Player 2 Fire1
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -150,7 +182,7 @@ InputManager:
     axis: 0
     joyNum: 2
   - serializedVersion: 3
-    m_Name: Player 1 Dodge
+    m_Name: Player 2 Dodge
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -165,38 +197,6 @@ InputManager:
     type: 0
     axis: 0
     joyNum: 2
-  - serializedVersion: 3
-    m_Name: Player 2 Fire1
-    descriptiveName: 
-    descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: joystick 3 button 5
-    altNegativeButton: 
-    altPositiveButton: mouse 0
-    gravity: 1000
-    dead: 0.001
-    sensitivity: 1000
-    snap: 0
-    invert: 0
-    type: 0
-    axis: 0
-    joyNum: 3
-  - serializedVersion: 3
-    m_Name: Player 2 Dodge
-    descriptiveName: 
-    descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: joystick 3 button 1
-    altNegativeButton: 
-    altPositiveButton: mouse 0
-    gravity: 1000
-    dead: 0.001
-    sensitivity: 1000
-    snap: 0
-    invert: 0
-    type: 0
-    axis: 0
-    joyNum: 3
   - serializedVersion: 3
     m_Name: Fire2
     descriptiveName: 

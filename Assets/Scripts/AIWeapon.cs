@@ -20,12 +20,15 @@ public class AIWeapon : Weapon
     public override void Update()
     {
 
-        Vector3 aim = ai.target - transform.position;
-        float distance = aim.magnitude;
-
-        if (distance < fireRange)
+        if (ai.targets.Length > 0)
         {
-            Fire(aim);
+            Vector3 aim = ai.target - transform.position;
+            float distance = aim.magnitude;
+
+            if (distance < fireRange)
+            {
+                Fire(aim);
+            }
         }
 
         base.Update();

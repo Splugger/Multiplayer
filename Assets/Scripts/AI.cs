@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AI : Creature {
 
+    public GameObject[] targets;
     public Vector3 target;
 
     float touchDamage = 5f;
@@ -22,7 +23,7 @@ public class AI : Creature {
     // Update is called once per frame
     public override void Update ()
     {
-        GameObject[] targets = FindPlayerObjs();
+        targets = FindPlayerObjs();
 
         if (targets.Length > 0)
         {
@@ -61,10 +62,15 @@ public class AI : Creature {
 
         foreach (Collider2D col in nearbyCols)
         {
-            Physics2D.Linecast(transform.position, col.transform.position);
-            if (col.gameObject.tag == "Player")
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, col.transform.position);
+            if (hit)
             {
-                visiblePlayers.Add(col.gameObject);
+                if (hit.transform.gameObject.tag == "Player")
+                {
+                    print(target);
+                    Creature creature = hit.transform.gameObject.GetComponent<Creature>();
+                    if (!creature.dead) visiblePlayers.Add(col.gameObject);
+                }
             }
         }
 
