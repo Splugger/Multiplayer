@@ -22,7 +22,7 @@ public class AIWeapon : Weapon
 
         if (ai.targets.Length > 0)
         {
-            Vector3 aim = ai.target - transform.position;
+            aim = ai.target - transform.position;
             float distance = aim.magnitude;
 
             if (distance < fireRange)
@@ -30,7 +30,6 @@ public class AIWeapon : Weapon
                 Fire(aim);
             }
         }
-
         base.Update();
     }
 }

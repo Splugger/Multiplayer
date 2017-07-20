@@ -6,14 +6,11 @@ public class PlayerWeapon : Weapon {
 
     Player player;
 
-    GameObject reticle;
-
     // Use this for initialization
     public override void Start ()
     {
         player = GetComponent<Player>();
-        reticle = Instantiate(Resources.Load("Reticle") as GameObject);
-        reticle.SetActive(false);
+        aim = Vector2.up;
 
         base.Start();
     }
@@ -24,23 +21,22 @@ public class PlayerWeapon : Weapon {
         vertical = Input.GetAxis("Player " + player.playerNum + " Aim Vertical");
         horizontal = Input.GetAxis("Player " + player.playerNum + " Aim Horizontal");
 
-        Vector3 aim = Vector3.Normalize(new Vector3(horizontal, vertical, 0f)) * 0.2f;
-
-        if (aim.magnitude > 0f)
+        Vector3 aimInput = new Vector3(horizontal, vertical, 0f);
+        if (aimInput.magnitude > 0.5f)
         {
-            reticle.SetActive(true);
-            reticle.transform.position = transform.position + aim;
-
-            if (Input.GetButton("Player " + player.playerNum + " Fire1") && cooldown <= 0f)
-            {
-                Fire(aim);
-            }
-        }
-        else
-        {
-            reticle.SetActive(false);
+            aim = Vector3.Normalize(aimInput * 0.2f);
         }
 
         base.Update();
+
+        if (Input.GetButton("Player " + player.playerNum + " Fire1") && cooldown <= 0f)
+        {
+            Fire(aim);
+        }
+
+        if (Input.GetButtonDown("Player " + player.playerNum + " Grenade"))
+        {
+            ThrowGrenade();
+        }
     }
 }

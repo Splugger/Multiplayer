@@ -12,8 +12,8 @@ public class AI : Creature {
 
     float viewDist = 10f;
 
-    float moveTimer = 1f;
-    float maxMoveTimer = 1f;
+    public float moveTimer = 1f;
+    public float maxMoveTimer = 1f;
 
     // Use this for initialization
     public override void Start () {
@@ -28,20 +28,11 @@ public class AI : Creature {
         if (targets.Length > 0)
         {
             target = targets.FindNearestGameObject(transform.position).transform.position;
-
-            horizontal = target.x - transform.position.x;
-            vertical = target.y - transform.position.y;
+            MoveToTarget(target);
         }
-        else if (moveTimer <= 0f)
+        else
         {
-            horizontal = Random.Range(-1f, 1f);
-            vertical = Random.Range(-1f, 1f);
-
-            moveTimer = maxMoveTimer;
-        }
-        else if (moveTimer > 0f)
-        {
-            moveTimer -= Time.deltaTime;
+            RandomMovement();
         }
 
         base.Update();
@@ -67,7 +58,6 @@ public class AI : Creature {
             {
                 if (hit.transform.gameObject.tag == "Player")
                 {
-                    print(target);
                     Creature creature = hit.transform.gameObject.GetComponent<Creature>();
                     if (!creature.dead) visiblePlayers.Add(col.gameObject);
                 }
@@ -75,6 +65,27 @@ public class AI : Creature {
         }
 
         return visiblePlayers.ToArray();
+    }
+
+    public void MoveToTarget(Vector3 target)
+    {
+        horizontal = target.x - transform.position.x;
+        vertical = target.y - transform.position.y;
+    }
+
+    public void RandomMovement()
+    {
+        if (moveTimer <= 0f)
+        {
+            horizontal = Random.Range(-1f, 1f);
+            vertical = Random.Range(-1f, 1f);
+
+            moveTimer = maxMoveTimer;
+        }
+        else if (moveTimer > 0f)
+        {
+            moveTimer -= Time.deltaTime;
+        }
     }
 
 }

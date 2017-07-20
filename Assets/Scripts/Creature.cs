@@ -8,6 +8,9 @@ public class Creature : MonoBehaviour {
     public float maxHealth = 100f;
     public bool dead = false;
 
+    float damageEffectTimer = 0f;
+    float maxDamageEffectTimer = 1f;
+
     public bool canDamage = true;
 
     public float moveSpeed = 3f;
@@ -25,6 +28,9 @@ public class Creature : MonoBehaviour {
     public Rigidbody2D rb;
     public Collider2D collider;
     public SpriteRenderer sprite;
+    public Animator anim;
+
+    Color color = Color.white;
 
     public float horizontal;
     public float vertical;
@@ -34,6 +40,10 @@ public class Creature : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+
+        //set random color
+        SetColor(new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f));
     }
 
     // Update is called once per frame
@@ -58,12 +68,14 @@ public class Creature : MonoBehaviour {
             dodgeCooldownTimer -= Time.deltaTime;
         }
 
-        Move(desiredTranslation);
+        if (rb.velocity.magnitude < maxSpeed) Move(desiredTranslation);
+        anim.SetFloat("Horizontal", horizontal);
+        anim.SetFloat("Vertical", vertical);
     }
 
     public void Move(Vector2 translation)
     {
-        if (rb.velocity.magnitude < maxSpeed) rb.AddForce((translation - rb.velocity) * acceleration);
+        rb.AddForce((translation - rb.velocity) * acceleration);
     }
 
     public void Dodge()
@@ -82,16 +94,41 @@ public class Creature : MonoBehaviour {
         if (health >= maxHealth) health = maxHealth;
     }
 
-    public void Damage(float amount, Vector2? knockback)
+    public void Damage(float amount, Vector2 knockback)
     {
         health -= amount;
         if (health <= 0f) Die();
-        if (knockback != null) Move(knockback.Value);
+        if (knockback != null) Move(knockback);
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(Flash(0.1f, Color.white));
+        }
     }
 
-    public void Die()
+    public virtual void Die()
     {
         dead = true;
         gameObject.SetActive(false);
+    }
+
+    public void AddColor(Color addedColor)
+    {
+        color += addedColor;
+        sprite.color = color;
+    }
+
+    public void SetColor(Color newColor)
+    {
+        color = newColor;
+        sprite.color = color;
+    }
+
+    IEnumerator Flash(float time, Color flashColor)
+    {
+        sprite.color = flashColor;
+
+        time += Time.deltaTime;
+        yield return new WaitForSeconds(time);
+        sprite.color = color;
     }
 }

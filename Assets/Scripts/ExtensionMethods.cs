@@ -98,4 +98,11 @@ public static class ExtensionMethods
         return nearestObj;
     }
 
+    public static Transform LookAt2D(this Transform transform, Vector2 position)
+    {
+        float rotZ = Mathf.Atan2(position.y, position.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, rotZ - 90);
+        return transform;
+    }
+
 }

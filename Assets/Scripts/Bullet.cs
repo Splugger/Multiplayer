@@ -8,41 +8,74 @@ public class Bullet : MonoBehaviour {
     public float knockback = 1f;
     public float lifetime = 2f;
 
+    float maxSpeed;
+    float timeSinceInstantiated;
+
     public Collider2D collider;
 
     public Rigidbody2D rb;
 
     public Collider2D sourceCollider;
 
+    private float timeInstantiated;
+
     // Use this for initialization
     void Start () {
         collider = GetComponent<Collider2D>();
         Physics2D.IgnoreCollision(collider, sourceCollider);
         rb = GetComponent<Rigidbody2D>();
-        Destroy(gameObject, lifetime);
+
+        Game.control.screenShake.Pulse(0.3f, 0.1f * knockback);
+        timeInstantiated = Time.timeSinceLevelLoad;
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        //rotate towards velocity
+        transform.LookAt2D(rb.velocity);
+
+        //speed by lifetime
+        timeSinceInstantiated = Time.timeSinceLevelLoad - timeInstantiated;
+        maxSpeed = -(timeSinceInstantiated + lifetime) * (timeSinceInstantiated - lifetime);
+
+        if (rb.velocity.magnitude > maxSpeed)
+        {
+            rb.AddForce(-rb.velocity);
+        }
+
+        if (maxSpeed <= 0f)
+        {
+            Impact();
+        }
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<Creature>() != null)
+        if (collision != null)
         {
-            Creature creature = collision.gameObject.GetComponent<Creature>();
-            if (creature.canDamage)
+            if (collision.gameObject.GetComponent<Creature>() != null)
             {
-                Vector2 knockbackDir = -rb.velocity * knockback;
-                creature.Damage(damage, knockbackDir);
+                Creature creature = collision.gameObject.GetComponent<Creature>();
+                if (creature.canDamage)
+                {
+                    Vector2 knockbackDir = -rb.velocity * knockback;
+                    creature.Damage(damage, knockbackDir);
+                }
+                /*else
+                {
+                    Physics2D.IgnoreCollision(collider, creature.collider);
+                    return;
+                }*/
             }
-            /*else
-            {
-                Physics2D.IgnoreCollision(collider, creature.collider);
-                return;
-            }*/
+
+            Impact();
         }
+    }
+
+    private void Impact()
+    {
+        GameObject impact = Instantiate(Resources.Load("BulletImpact") as GameObject);
+        impact.transform.position = transform.position;
         Destroy(gameObject);
     }
 }

@@ -25,4 +25,11 @@ public class Player : Creature {
 
         base.Update();
 	}
+
+    public override void Die()
+    {
+        Game.control.playerObjs.Remove(gameObject);
+
+        base.Die();
+    }
 }
