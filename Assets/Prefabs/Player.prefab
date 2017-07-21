@@ -121,6 +121,8 @@ MonoBehaviour:
   creature: {fileID: 0}
   vertical: 0
   horizontal: 0
+  throwDistance: 100
+  throwStaminaCost: 10
   bulletSpeed: 200
   bulletSpread: 0.1
   bulletDamage: 10
@@ -129,8 +131,12 @@ MonoBehaviour:
   range: 2
   maxCooldown: 0.05
   cooldown: 0
+  maxGrenadeCooldown: 1
+  grenadeCooldown: 0
   gun: {fileID: 0}
   aim: {x: 0, y: 0, z: 0}
+  normalAim: {x: 0, y: 0, z: 0}
+  source: {fileID: 0}
 --- !u!114 &114976398714755146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,6 +151,9 @@ MonoBehaviour:
   health: 100
   maxHealth: 100
   dead: 0
+  stamina: 100
+  maxStamina: 100
+  staminaRegenRate: 5
   canDamage: 1
   moveSpeed: 3
   acceleration: 5

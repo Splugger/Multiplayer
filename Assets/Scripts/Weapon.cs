@@ -11,6 +11,7 @@ public class Weapon : MonoBehaviour
     public float horizontal;
 
     public float throwDistance = 100f;
+    public float throwStaminaCost = 10f;
 
     public float bulletSpeed = 200f;
     public float bulletSpread = 0.1f;
@@ -91,12 +92,16 @@ public class Weapon : MonoBehaviour
 
     public void ThrowGrenade()
     {
-        normalAim = Vector3.Normalize(aim);
+        if (creature.stamina > throwStaminaCost)
+        {
+            normalAim = Vector3.Normalize(aim);
 
-        GameObject grenadeObj = Instantiate(Resources.Load("Grenade") as GameObject);
-        grenadeObj.transform.position = transform.position + normalAim * 0.2f;
-        grenadeObj.GetComponent<Rigidbody2D>().AddForce(normalAim * throwDistance);
+            GameObject grenadeObj = Instantiate(Resources.Load("Grenade") as GameObject);
+            grenadeObj.transform.position = transform.position + normalAim * 0.2f;
+            grenadeObj.GetComponent<Rigidbody2D>().AddForce(normalAim * throwDistance);
 
-        grenadeCooldown = maxGrenadeCooldown;
+            grenadeCooldown = maxGrenadeCooldown;
+            creature.UseStamina(throwStaminaCost);
+        }
     }
 }

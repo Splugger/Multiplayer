@@ -8,8 +8,9 @@ public class Creature : MonoBehaviour {
     public float maxHealth = 100f;
     public bool dead = false;
 
-    float damageEffectTimer = 0f;
-    float maxDamageEffectTimer = 1f;
+    public float stamina = 100f;
+    public float maxStamina = 100f;
+    public float staminaRegenRate = 5f;
 
     public bool canDamage = true;
 
@@ -24,6 +25,7 @@ public class Creature : MonoBehaviour {
     float maxDodgeTimer = 0.2f;
     float dodgeCooldownTimer = 0f;
     float maxdodgeCooldownTimer = 0.6f;
+    float dodgeStaminaCost = 15f;
 
     public Rigidbody2D rb;
     public Collider2D collider;
@@ -68,8 +70,18 @@ public class Creature : MonoBehaviour {
             dodgeCooldownTimer -= Time.deltaTime;
         }
 
+        //stamina regen
+        if (stamina < maxStamina)
+        {
+            stamina += Time.deltaTime * staminaRegenRate;
+        }
+
         if (rb.velocity.magnitude < maxSpeed) Move(desiredTranslation);
         anim.SetFloat("Horizontal", horizontal);
+        if (horizontal < 0f)
+        {
+            sprite.flipX = true;
+        }
         anim.SetFloat("Vertical", vertical);
     }
 
@@ -80,11 +92,12 @@ public class Creature : MonoBehaviour {
 
     public void Dodge()
     {
-        if (dodgeCooldownTimer <= 0f)
+        if (dodgeCooldownTimer <= 0f && stamina > dodgeStaminaCost)
         {
             rb.AddForce(desiredTranslation * dodgeSpeed);
             dodgeTimer = maxDodgeTimer;
             dodgeCooldownTimer = maxdodgeCooldownTimer;
+            UseStamina(dodgeStaminaCost);
         }
     }
 
@@ -109,6 +122,11 @@ public class Creature : MonoBehaviour {
     {
         dead = true;
         gameObject.SetActive(false);
+    }
+
+    public void UseStamina(float amount)
+    {
+        stamina -= amount;
     }
 
     public void AddColor(Color addedColor)

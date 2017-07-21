@@ -15,16 +15,17 @@ public class AI : Creature {
     public float moveTimer = 1f;
     public float maxMoveTimer = 1f;
 
+    public float searchRate = 1f;
+
     // Use this for initialization
     public override void Start () {
         base.Start();
+        StartCoroutine(TargetSearch());
     }
 
     // Update is called once per frame
     public override void Update ()
     {
-        targets = FindPlayerObjs();
-
         if (targets.Length > 0)
         {
             target = targets.FindNearestGameObject(transform.position).transform.position;
@@ -44,6 +45,12 @@ public class AI : Creature {
         {
             collision.gameObject.GetComponent<Player>().Damage(touchDamage, rb.velocity * touchKnockback);
         }
+    }
+
+    IEnumerator TargetSearch()
+    {
+        yield return new WaitForSeconds(Random.value * searchRate);
+        targets = FindPlayerObjs();
     }
 
     GameObject[] FindPlayerObjs()
