@@ -88,11 +88,14 @@ public static class ExtensionMethods
         Vector3 currentPos = pos;
         foreach (GameObject o in objs)
         {
-            float dist = Vector3.Distance(o.transform.position, currentPos);
-            if (dist < minDist)
+            if (o != null)
             {
-                nearestObj = o;
-                minDist = dist;
+                float dist = Vector3.Distance(o.transform.position, currentPos);
+                if (dist < minDist)
+                {
+                    nearestObj = o;
+                    minDist = dist;
+                }
             }
         }
         return nearestObj;

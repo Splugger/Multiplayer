@@ -24,9 +24,13 @@ public class GenerateDungeon : MonoBehaviour
     int numRooms;
     int[,] tileMap;
 
+    CompositeCollider2D collider;
+
     // Use this for initialization
     void Start()
     {
+        collider = GetComponent<CompositeCollider2D>();
+
         tileMap = new int[mapWidth, mapHeight];
 
         numRooms = Random.Range(minNumRooms, maxNumRooms);
@@ -36,6 +40,7 @@ public class GenerateDungeon : MonoBehaviour
         }
         GenerateHallways();
         DrawMap();
+        collider.GenerateGeometry();
 
         //spawn resources
         SpawnOnMap(numWalkers, "Walker");
@@ -96,6 +101,7 @@ public class GenerateDungeon : MonoBehaviour
 
     void DrawMap()
     {
+        List<GameObject> wallTiles = new List<GameObject>();
         for (int x = 0; x < mapWidth; x++)
         {
             for (int y = 0; y < mapHeight; y++)
@@ -111,6 +117,7 @@ public class GenerateDungeon : MonoBehaviour
                         break;
                 }
                 tile.transform.position = new Vector2(x * gridSize, y * gridSize);
+                tile.transform.parent = transform;
             }
         }
     }

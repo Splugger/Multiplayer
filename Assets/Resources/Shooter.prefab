@@ -139,7 +139,7 @@ MonoBehaviour:
   target: {x: 0, y: 0, z: 0}
   moveTimer: 1
   maxMoveTimer: 1
-  searchRate: 1
+  searchRate: 0.1
 --- !u!114 &114944444057569268
 MonoBehaviour:
   m_ObjectHideFlags: 1

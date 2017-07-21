@@ -15,7 +15,7 @@ public class AI : Creature {
     public float moveTimer = 1f;
     public float maxMoveTimer = 1f;
 
-    public float searchRate = 1f;
+    public float searchRate = 0.1f;
 
     // Use this for initialization
     public override void Start () {
@@ -49,8 +49,11 @@ public class AI : Creature {
 
     IEnumerator TargetSearch()
     {
-        yield return new WaitForSeconds(Random.value * searchRate);
-        targets = FindPlayerObjs();
+        while (gameObject.activeInHierarchy)
+        {
+            targets = FindPlayerObjs();
+            yield return new WaitForSeconds(Random.value * searchRate);
+        }
     }
 
     GameObject[] FindPlayerObjs()

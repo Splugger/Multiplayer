@@ -117,6 +117,8 @@ GameObject:
   m_Component:
   - component: {fileID: 123858480}
   - component: {fileID: 123858479}
+  - component: {fileID: 123858482}
+  - component: {fileID: 123858481}
   m_Layer: 0
   m_Name: Dungeon Generator
   m_TagString: Untagged
@@ -141,8 +143,9 @@ MonoBehaviour:
   maxRoomSize: 30
   mapWidth: 100
   mapHeight: 100
-  numWalkers: 0
-  numShooters: 0
+  doubleHallwayWidth: 1
+  numWalkers: 10
+  numShooters: 4
 --- !u!4 &123858480
 Transform:
   m_ObjectHideFlags: 0
@@ -154,8 +157,48 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!66 &123858481
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 123858478}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 1
+  m_EdgeRadius: 0
+  m_ColliderPaths: []
+  m_CompositePaths:
+    m_Paths: []
+  m_VertexDistance: 0.0005
+--- !u!50 &123858482
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 123858478}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7
 --- !u!1 &232720632
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,8 +239,63 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &325683730
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4982636182109416, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 9.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982636182109416, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 10.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982636182109416, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982636182109416, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982636182109416, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982636182109416, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982636182109416, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982636182109416, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602859231102622, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_Name
+      value: Player 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1602859231102622, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114976398714755146, guid: b332f4567023a48499b0f351dbfa493e,
+        type: 2}
+      propertyPath: playerNum
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &954653809
 Prefab:
   m_ObjectHideFlags: 0

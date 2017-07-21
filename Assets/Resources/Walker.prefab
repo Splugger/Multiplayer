@@ -138,7 +138,7 @@ MonoBehaviour:
   target: {x: 0, y: 0, z: 0}
   moveTimer: 1
   maxMoveTimer: 1
-  searchRate: 1
+  searchRate: 0.1
 --- !u!212 &212867874130060616
 SpriteRenderer:
   m_ObjectHideFlags: 1
