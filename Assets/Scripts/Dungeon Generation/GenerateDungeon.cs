@@ -12,10 +12,13 @@ public class GenerateDungeon : MonoBehaviour
     public int mapWidth = 100;
     public int mapHeight = 100;
 
+    public bool doubleHallwayWidth = true;
+
     public int numWalkers = 10;
     public int numShooters = 3;
 
     List<Vector4> rooms = new List<Vector4>();
+    bool[] roomConnected;
 
     float gridSize = 0.16f;
     int numRooms;
@@ -29,7 +32,7 @@ public class GenerateDungeon : MonoBehaviour
         numRooms = Random.Range(minNumRooms, maxNumRooms);
         for (int i = 0; i < numRooms; i++)
         {
-            GenerateRoom(i);
+            GenerateRoom();
         }
         GenerateHallways();
         DrawMap();
@@ -71,27 +74,11 @@ public class GenerateDungeon : MonoBehaviour
         }
     }
 
-    void GenerateRoom(int roomNum)
+    void GenerateRoom()
     {
         int width = Random.Range(minRoomSize, maxRoomSize);
         int height = Random.Range(minRoomSize, maxRoomSize);
         Vector2 position = RandomMapPoint(0);
-
-        switch (roomNum)
-        {
-            case 0:
-                position = new Vector2(20f, 40f);
-                break;
-            case 1:
-                position = new Vector2(10f, 40f);
-                break;
-            case 2:
-                position = new Vector2(10f, 60f);
-                break;
-            case 3:
-                position = new Vector2(80f, 80f);
-                break;
-        }
 
         for (int x = 0; x < width; x++)
         {
@@ -144,12 +131,9 @@ public class GenerateDungeon : MonoBehaviour
         }
     }
 
-    enum HallwayMode { vertical, horizontal };
-
     void GenerateHallways()
     {
-        HallwayMode hallwayMode = HallwayMode.vertical;
-
+        roomConnected = new bool[rooms.Count];
         for (int i = 0; i < numRooms; i++)
         {
             //find position of room
@@ -162,13 +146,13 @@ public class GenerateDungeon : MonoBehaviour
             int closestRoomIndex = 0;
 
             //look through all rooms
-            for (int r = 0; r < numRooms; r++)
+            for (int r = 0; r < numRooms - 1; r++)
             {
                 int x = (int)rooms[r].x;
                 int y = (int)rooms[r].y;
 
                 //check if room is nearby
-                if (Mathf.Abs(x1 - x) + Mathf.Abs(y1 - y) < minDist && r != i)
+                if (Mathf.Abs(x1 - x) + Mathf.Abs(y1 - y) < minDist && r != i && !roomConnected[r])
                 {
                     minDist = Mathf.Abs(x1 - x) + Mathf.Abs(y1 - y);
                     closestRoomIndex = r;
@@ -181,97 +165,51 @@ public class GenerateDungeon : MonoBehaviour
             int w2 = (int)rooms[closestRoomIndex].z;
             int h2 = (int)rooms[closestRoomIndex].w;
 
-            //print("Room at " + x1 + ", " + y1 + " connecting to room at " + x2 + ", " + y2);
-
-            if (x1 < x2 || x2 < x1)
-            {
-                hallwayMode = HallwayMode.vertical;
-            }
-            else if (y1 < y2 || y2 < y1)
-            {
-                hallwayMode = HallwayMode.horizontal;
-            }
-            else continue;
+            roomConnected[i] = true;
+            roomConnected[closestRoomIndex] = true;
 
             //calculate hallway positions
-            hallwayMode = HallwayMode.horizontal;
-            switch (hallwayMode)
+            int hallY1 = Random.Range(y1 + 1, y1 + h1 - 1);
+            int hallY2 = Random.Range(y2 + 1, y2 + h2 - 1);
+            int midX = Random.Range(x1 + (w1 / 2), x2 + (w2 / 2));
+
+            //generate horizontal hallway
+            if (x1 != x2)
             {
-                case HallwayMode.horizontal:
-                    int hallY1 = Random.Range(y1, y1 + h1);
-                    int hallY2 = Random.Range(y2, y2 + h2);
-                    int midX = Random.Range(x1, x2);
+                int startX = x1 + (w1 / 2);
+                int endX = x2 + (w2 / 2);
+                int startY = hallY1;
+                int endY = hallY2;
+                //switch to go from smaller to larger
+                if (endX < startX)
+                {
+                    int temp = endX;
+                    endX = startX;
+                    startX = temp;
 
-                    //generate horizontal hallway
-                    if (x1 != x2)
-                    {
-                        int startX = x1 + (w1 / 2);
-                        int endX = x2 + (w2 / 2);
-                        int startY = hallY1;
-                        int endY = hallY2;
-                        //switch to go from smaller to larger
-                        if (endX < startX)
-                        {
-                            int temp = endX;
-                            endX = startX;
-                            startX = temp;
+                    temp = endY;
+                    endY = startY;
+                    startY = temp;
+                }
+                for (int pathX = startX; pathX <= endX; pathX++)
+                {
+                    int pathY = startY;
+                    if (pathX >= midX) pathY = endY;
+                    tileMap[pathX, pathY] = 1;
+                    if (doubleHallwayWidth) tileMap[pathX, pathY - 1] = 1;
+                }
+            }
 
-                            temp = endY;
-                            endY = startY;
-                            startY = temp;
-                        }
-                        for (int pathX = startX; pathX < endX; pathX ++)
-                        {
-                            int pathY = startY;
-                            if (pathX >= midX) pathY = endY;
-                            tileMap[pathX, pathY] = 1;
-                        }
-                    }
+            //connect vertically
+            int minHallY = Mathf.Min(hallY1, hallY2);
+            int maxHallY = Mathf.Max(hallY1, hallY2);
 
-                    //connect vertically
-                    int minHallY = Mathf.Min(hallY1, hallY2);
-                    int maxHallY = Mathf.Max(hallY1, hallY2);
-
-                    for (int pathVertical = minHallY; pathVertical < maxHallY; pathVertical++)
-                    {
-                        tileMap[midX, pathVertical] = 1;
-                    }
-                    break;
-                case HallwayMode.vertical:
-                    int hallX1 = Random.Range(x1 - (w1 / 2), x1 + (w1 / 2));
-                    int hallX2 = Random.Range(x2 - (w2 / 2), x2 + (w2 / 2));
-                    int midY = Random.Range(y1, y2);
-
-                    //generate vertical hallway
-                    for (int pathY1 = y1 + (h1 / 2); pathY1 < midY; pathY1++)
-                    {
-                        int pathX1 = hallX1;
-                        if (!(pathX1 < mapWidth && pathY1 < mapHeight))
-                        {
-                            Debug.Break();
-                        }
-                        tileMap[pathX1, pathY1] = 1;
-                    }
-                    for (int pathY2 = y2 + (h2 / 2); pathY2 < midY; pathY2++)
-                    {
-                        int pathX2 = hallX2;
-                        if (!(pathX2 < mapWidth && pathY2 < mapHeight))
-                        {
-                            Debug.Break();
-                        }
-                        tileMap[pathX2, pathY2] = 1;
-                    }
-
-                    //connect horizontally
-                    int minHallX = Mathf.Min(hallX1, hallX2);
-                    int maxHallX = Mathf.Max(hallX1, hallX2);
-
-                    for (int pathHorizontal = x1 + minHallX; pathHorizontal < maxHallX; pathHorizontal++)
-                    {
-                        tileMap[midY, pathHorizontal] = 1;
-                    }
-                    break;
+            for (int pathVertical = minHallY; pathVertical <= maxHallY; pathVertical++)
+            {
+                tileMap[midX, pathVertical] = 1;
+                if (doubleHallwayWidth) tileMap[midX + 1, pathVertical] = 1;
             }
         }
     }
 }
+
