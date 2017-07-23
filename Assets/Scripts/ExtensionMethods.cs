@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public static class ExtensionMethods
 {
 
-    public static Object LoadRandomPrefab(this string resource)
+    public static UnityEngine.Object LoadRandomPrefab(this string resource)
     {
         int variation = 1;
         bool resourceFound = true;
@@ -20,7 +21,7 @@ public static class ExtensionMethods
                 resourceFound = false;
             }
         }
-        return Resources.Load(resource + "_" + Random.Range(1, variation).ToString());
+        return Resources.Load(resource + "_" + UnityEngine.Random.Range(1, variation).ToString());
     }
 
     public static bool CanSeeGameObject(this GameObject go, float fov, GameObject target, Vector3 offset)
@@ -106,6 +107,25 @@ public static class ExtensionMethods
         float rotZ = Mathf.Atan2(position.y, position.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rotZ - 90);
         return transform;
+    }
+
+    public static T CopyComponent<T>(this T original, GameObject destination, bool simpleOnly = false) where T : Component
+    {
+        Type type = original.GetType();
+        Component copy = destination.AddComponent(type);
+        System.Reflection.FieldInfo[] fields = type.GetFields();
+        foreach (System.Reflection.FieldInfo field in fields)
+        {
+            if (simpleOnly)
+            {
+                if (!(field.FieldType.IsPrimitive || field.FieldType.Equals(typeof(string))))
+                {
+                    continue;
+                }
+            }
+            field.SetValue(copy, field.GetValue(original));
+        }
+        return copy as T;
     }
 
 }

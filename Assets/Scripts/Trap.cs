@@ -44,9 +44,11 @@ public class Trap : MonoBehaviour
             mindControl.duration = mindControlDuration;
         }
 
-        //create effect and destroy
+        //create effect, add new tile, and destroy
         GameObject effect = Instantiate(Resources.Load("TrapActivated") as GameObject);
         effect.transform.position = creature.transform.position;
+        GameObject newTile = Instantiate(Resources.Load("Tile_Floor") as GameObject);
+        newTile.transform.position = transform.position;
         Destroy(gameObject);
     }
 }

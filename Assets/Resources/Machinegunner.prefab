@@ -25,8 +25,9 @@ GameObject:
   - component: {fileID: 114944444057569268}
   - component: {fileID: 95169465397281094}
   - component: {fileID: 61569422134219980}
+  - component: {fileID: 114618078287172526}
   m_Layer: 0
-  m_Name: Shooter
+  m_Name: Machinegunner
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,6 +108,37 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114618078287172526
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1010085091703090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d6e77aba3b22f245b81c12e549780cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creature: {fileID: 0}
+  useButton: fire1
+  vertical: 0
+  horizontal: 0
+  throwDistance: 100
+  throwStaminaCost: 10
+  damage: 10
+  knockback: 3
+  recoil: 3
+  range: 2
+  maxCooldown: 0.1
+  cooldown: 0
+  maxGrenadeCooldown: 1
+  grenadeCooldown: 0
+  weaponObj: {fileID: 0}
+  aim: {x: 0, y: 0, z: 0}
+  normalAim: {x: 0, y: 0, z: 0}
+  source: {fileID: 0}
+  bulletSpeed: 200
+  bulletSpread: 0.1
 --- !u!114 &114800095642804400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -123,7 +155,9 @@ MonoBehaviour:
   dead: 0
   stamina: 100
   maxStamina: 100
-  staminaRegenRate: 5
+  staminaRegen: 60
+  staminaCooldownTime: 1.5
+  staminaCooldown: 0
   canDamage: 1
   moveSpeed: 1
   acceleration: 5
@@ -133,6 +167,7 @@ MonoBehaviour:
   collider: {fileID: 0}
   sprite: {fileID: 0}
   anim: {fileID: 0}
+  shield: {fileID: 0}
   horizontal: 0
   vertical: 0
   targets: []
@@ -151,25 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c02502deab8e894ba78ee7da8c3bd09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  creature: {fileID: 0}
-  vertical: 0
-  horizontal: 0
-  throwDistance: 100
-  throwStaminaCost: 10
-  bulletSpeed: 200
-  bulletSpread: 0.1
-  bulletDamage: 10
-  bulletKnockback: 3
-  recoil: 5
-  range: 2
-  maxCooldown: 0.05
-  cooldown: 0
-  maxGrenadeCooldown: 1
-  grenadeCooldown: 0
-  gun: {fileID: 0}
-  aim: {x: 0, y: 0, z: 0}
-  normalAim: {x: 0, y: 0, z: 0}
-  source: {fileID: 0}
+  weapons: []
 --- !u!212 &212851930003957214
 SpriteRenderer:
   m_ObjectHideFlags: 1

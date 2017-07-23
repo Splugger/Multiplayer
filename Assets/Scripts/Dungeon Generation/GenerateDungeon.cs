@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TileType { wall, floor, trap }
+
 public class GenerateDungeon : MonoBehaviour
 {
 
@@ -15,14 +17,18 @@ public class GenerateDungeon : MonoBehaviour
     public bool doubleHallwayWidth = true;
 
     public int numWalkers = 10;
-    public int numShooters = 3;
+    public int numSwordsmen = 10;
+    public int numPistol = 3;
+    public int numMG = 1;
+
+    public int numChests = 2;
 
     List<Vector4> rooms = new List<Vector4>();
     bool[] roomConnected;
 
     float gridSize = 0.16f;
     int numRooms;
-    int[,] tileMap;
+    TileType[,] tileMap;
 
     CompositeCollider2D collider;
 
@@ -31,7 +37,7 @@ public class GenerateDungeon : MonoBehaviour
     {
         collider = GetComponent<CompositeCollider2D>();
 
-        tileMap = new int[mapWidth, mapHeight];
+        tileMap = new TileType[mapWidth, mapHeight];
 
         numRooms = Random.Range(minNumRooms, maxNumRooms);
         for (int i = 0; i < numRooms; i++)
@@ -44,28 +50,33 @@ public class GenerateDungeon : MonoBehaviour
 
         //spawn resources
         SpawnOnMap(numWalkers, "Walker");
-        SpawnOnMap(numShooters, "Shooter");
+        SpawnOnMap(numMG, "Machinegunner");
+        SpawnOnMap(numPistol, "Pistolier");
+        SpawnOnMap(numSwordsmen, "Swordsman");
+        SpawnOnMap(numChests, "Chest");
 
         //spawn players
-        foreach (GameObject obj in Game.control.playerObjs)
+
+        Vector2 spawnPos = RandomMapPoint(TileType.floor) * gridSize;
+        Collider2D[] cols = Physics2D.OverlapCircleAll(spawnPos, mapWidth);
+        foreach (Collider2D col in cols)
         {
-            obj.transform.position = RandomMapPoint(1) * gridSize;
-            Collider2D[] cols = Physics2D.OverlapCircleAll(obj.transform.position, mapWidth);
-            foreach (Collider2D col in cols)
+            Creature creature = col.gameObject.GetComponent<Creature>();
+            if (creature != null)
             {
-                Creature creature = col.gameObject.GetComponent<Creature>();
-                if (creature != null)
+                RaycastHit2D hit = Physics2D.Linecast(spawnPos, col.transform.position);
+                if (hit)
                 {
-                    RaycastHit2D hit = Physics2D.Linecast(obj.transform.position, col.transform.position);
-                    if (hit)
+                    if (hit.transform.gameObject.tag == "Enemy")
                     {
-                        if (hit.transform.gameObject.tag == "Enemy")
-                        {
-                            obj.transform.position = RandomMapPoint(1) * gridSize;
-                        }
+                        spawnPos = RandomMapPoint(TileType.floor) * gridSize;
                     }
                 }
             }
+        }
+        foreach (GameObject obj in Game.control.playerObjs)
+        {
+            obj.transform.position = spawnPos;
         }
 
     }
@@ -75,7 +86,7 @@ public class GenerateDungeon : MonoBehaviour
         for (int i = 0; i < number; i++)
         {
             GameObject obj = Instantiate(Resources.Load(name) as GameObject);
-            obj.transform.position = RandomMapPoint(1) * gridSize;
+            obj.transform.position = RandomMapPoint(TileType.floor) * gridSize;
         }
     }
 
@@ -91,7 +102,7 @@ public class GenerateDungeon : MonoBehaviour
             {
                 if (x != 0 && y != 0 && x != mapWidth && y != mapHeight)
                 {
-                    tileMap[(int)position.x + x, (int)position.y + y] = 1;
+                    tileMap[(int)position.x + x, (int)position.y + y] = RandomTileType();
                 }
             }
         }
@@ -109,11 +120,14 @@ public class GenerateDungeon : MonoBehaviour
                 GameObject tile = null;
                 switch (tileMap[x, y])
                 {
-                    case 0:
+                    case TileType.wall:
                         tile = Instantiate(Resources.Load("Tile_Wall") as GameObject);
                         break;
-                    case 1:
+                    case TileType.floor:
                         tile = Instantiate(Resources.Load("Tile_Floor") as GameObject);
+                        break;
+                    case TileType.trap:
+                        tile = Instantiate(Resources.Load("Tile_Trap") as GameObject);
                         break;
                 }
                 tile.transform.position = new Vector2(x * gridSize, y * gridSize);
@@ -122,19 +136,19 @@ public class GenerateDungeon : MonoBehaviour
         }
     }
 
-    Vector2 RandomMapPoint(int tileIndex)
+    Vector2 RandomMapPoint(TileType tileType)
     {
         int x = Random.Range(0, mapWidth - maxRoomSize);
         int y = Random.Range(0, mapHeight - maxRoomSize);
         Vector2 mapPos = new Vector2(x, y);
 
-        if (tileMap[x, y] == tileIndex)
+        if (tileMap[x, y] == tileType)
         {
             return mapPos;
         }
         else
         {
-            return RandomMapPoint(tileIndex);
+            return RandomMapPoint(tileType);
         }
     }
 
@@ -202,8 +216,9 @@ public class GenerateDungeon : MonoBehaviour
                 {
                     int pathY = startY;
                     if (pathX >= midX) pathY = endY;
-                    tileMap[pathX, pathY] = 1;
-                    if (doubleHallwayWidth) tileMap[pathX, pathY - 1] = 1;
+
+                    tileMap[pathX, pathY] = RandomTileType();
+                    if (doubleHallwayWidth) tileMap[pathX, pathY - 1] = RandomTileType();
                 }
             }
 
@@ -213,9 +228,20 @@ public class GenerateDungeon : MonoBehaviour
 
             for (int pathVertical = minHallY; pathVertical <= maxHallY; pathVertical++)
             {
-                tileMap[midX, pathVertical] = 1;
-                if (doubleHallwayWidth) tileMap[midX + 1, pathVertical] = 1;
+                tileMap[midX, pathVertical] = RandomTileType();
+                if (doubleHallwayWidth) tileMap[midX + 1, pathVertical] = RandomTileType();
             }
+        }
+    }
+
+    TileType RandomTileType()
+    {
+        switch (Random.Range(0, 300))
+        {
+            case 0:
+                return TileType.trap;
+            default:
+                return TileType.floor;
         }
     }
 }

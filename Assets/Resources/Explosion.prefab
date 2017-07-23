@@ -321,7 +321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 2
   damage: 30
-  knockback: 50
+  knockback: 20
 --- !u!198 &198525300769695954
 ParticleSystem:
   m_ObjectHideFlags: 1

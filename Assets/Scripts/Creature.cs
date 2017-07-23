@@ -10,7 +10,9 @@ public class Creature : MonoBehaviour {
 
     public float stamina = 100f;
     public float maxStamina = 100f;
-    public float staminaRegenRate = 5f;
+    public float staminaRegen = 60f;
+    public float staminaCooldownTime = 1.5f;
+    public float staminaCooldown = 0f;
 
     public bool canDamage = true;
 
@@ -31,6 +33,7 @@ public class Creature : MonoBehaviour {
     public Collider2D collider;
     public SpriteRenderer sprite;
     public Animator anim;
+    public Shield shield;
 
     Color color = Color.white;
 
@@ -43,13 +46,20 @@ public class Creature : MonoBehaviour {
         collider = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        shield = GetComponent<Shield>();
 
         //set random color
         SetColor(new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f));
     }
 
     // Update is called once per frame
-    public virtual void Update () {
+    public virtual void Update ()
+    {
+        if (dead)
+        {
+            rb.drag = 20f;
+            return;
+        }
 
         desiredTranslation = Vector3.Normalize(new Vector3(horizontal, vertical)) * moveSpeed;
 
@@ -70,11 +80,16 @@ public class Creature : MonoBehaviour {
             dodgeCooldownTimer -= Time.deltaTime;
         }
 
-        //stamina regen
-        if (stamina < maxStamina)
+        //regenerate stamina
+        if (staminaCooldown > 0)
         {
-            stamina += Time.deltaTime * staminaRegenRate;
+            staminaCooldown -= Time.deltaTime;
         }
+        else
+        {
+            RegenerateStamina(staminaRegen * Time.deltaTime);
+        }
+
 
         if (rb.velocity.magnitude < maxSpeed) Move(desiredTranslation);
         anim.SetFloat("Horizontal", horizontal);
@@ -87,7 +102,7 @@ public class Creature : MonoBehaviour {
 
     public void Move(Vector2 translation)
     {
-        rb.AddForce((translation - rb.velocity) * acceleration);
+        if (rb != null) rb.AddForce((translation - rb.velocity) * acceleration);
     }
 
     public void Dodge()
@@ -101,13 +116,30 @@ public class Creature : MonoBehaviour {
         }
     }
 
-    public void Heal(float amount)
+    public virtual void RegenerateStamina(float amount)
+    {
+        float shieldMultiplier = 1f;
+        if (shield != null)
+            if (shield.weaponObj.activeInHierarchy) shieldMultiplier = 0.3f;
+        if (stamina > maxStamina)
+        {
+            stamina = maxStamina;
+            return;
+        }
+        if (stamina + amount > maxStamina)
+        {
+            amount = maxStamina - stamina;
+        }
+        stamina += amount * shieldMultiplier;
+    }
+
+    public virtual void Heal(float amount)
     {
         health += amount;
         if (health >= maxHealth) health = maxHealth;
     }
 
-    public void Damage(float amount, Vector2 knockback)
+    public virtual void Damage(float amount, Vector2 knockback)
     {
         health -= amount;
         if (health <= 0f) Die();
@@ -120,13 +152,14 @@ public class Creature : MonoBehaviour {
 
     public virtual void Die()
     {
+        anim.SetTrigger("Dead");
         dead = true;
-        gameObject.SetActive(false);
     }
 
-    public void UseStamina(float amount)
+    public virtual void UseStamina(float amount)
     {
         stamina -= amount;
+        staminaCooldown = staminaCooldownTime;
     }
 
     public void AddColor(Color addedColor)

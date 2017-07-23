@@ -53,9 +53,9 @@ public class Bullet : MonoBehaviour {
     {
         if (collision != null)
         {
-            if (collision.gameObject.GetComponent<Creature>() != null)
+            Creature creature = collision.gameObject.GetComponent<Creature>();
+            if (creature != null)
             {
-                Creature creature = collision.gameObject.GetComponent<Creature>();
                 if (creature.canDamage)
                 {
                     Vector2 knockbackDir = -rb.velocity * knockback;
@@ -72,7 +72,7 @@ public class Bullet : MonoBehaviour {
         }
     }
 
-    private void Impact()
+    public void Impact()
     {
         GameObject impact = Instantiate(Resources.Load("BulletImpact") as GameObject);
         impact.transform.position = transform.position;

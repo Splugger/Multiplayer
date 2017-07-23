@@ -8,9 +8,9 @@ public class CameraFollowPlayers : MonoBehaviour
 
     public float followSpeed = 0.1f;
 
-    float minCamSize = 3f;
+    float minCamSize = 1f;
     float screenEdgeDist = 1f;
-    float enemyFocusDist = 5f;
+    float enemyFocusDist = 1f;
 
     Vector3 target;
     Camera cam;
