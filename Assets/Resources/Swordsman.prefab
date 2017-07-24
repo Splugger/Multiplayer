@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 95169465397281094}
   - component: {fileID: 61569422134219980}
   - component: {fileID: 114288507573841902}
+  - component: {fileID: 114324980086014190}
   m_Layer: 0
   m_Name: Swordsman
   m_TagString: Enemy
@@ -120,22 +121,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creature: {fileID: 0}
+  useButton: Fire1
   vertical: 0
   horizontal: 0
-  throwDistance: 100
-  throwStaminaCost: 10
   damage: 10
   knockback: 30
   recoil: 3
   range: 1
+  ammo: 100
+  maxAmmo: 100
   maxCooldown: 1
   cooldown: 0
-  maxGrenadeCooldown: 1
-  grenadeCooldown: 0
   weaponObj: {fileID: 0}
   aim: {x: 0, y: 0, z: 0}
   normalAim: {x: 0, y: 0, z: 0}
   source: {fileID: 0}
+  spriteTransform: {fileID: 0}
+  sprite: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  control: {fileID: 0}
+  staminaCost: 10
+  slashWidth: 0
+--- !u!114 &114324980086014190
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1010085091703090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b3b8859aa5b644cb66212d42aacdb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114800095642804400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -152,16 +169,19 @@ MonoBehaviour:
   dead: 0
   stamina: 100
   maxStamina: 100
-  staminaRegenRate: 5
+  staminaRegen: 60
+  staminaCooldownTime: 1.5
+  staminaCooldown: 0
   canDamage: 1
   moveSpeed: 1
   acceleration: 5
   maxSpeed: 100
   desiredTranslation: {x: 0, y: 0}
   rb: {fileID: 0}
-  collider: {fileID: 0}
   sprite: {fileID: 0}
   anim: {fileID: 0}
+  shield: {fileID: 0}
+  collider: {fileID: 0}
   horizontal: 0
   vertical: 0
   targets: []
@@ -180,7 +200,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c02502deab8e894ba78ee7da8c3bd09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 0}
+  weapons: []
+  primary: {fileID: 0}
+  secondary: {fileID: 0}
+  thrown: {fileID: 0}
+  creature: {fileID: 0}
 --- !u!212 &212851930003957214
 SpriteRenderer:
   m_ObjectHideFlags: 1

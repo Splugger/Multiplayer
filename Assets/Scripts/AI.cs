@@ -43,7 +43,7 @@ public class AI : Creature {
     {
         if (collision.gameObject.tag == "Player" && !dead)
         {
-            collision.gameObject.GetComponent<Player>().Damage(touchDamage, rb.velocity * touchKnockback);
+            collision.gameObject.GetComponent<Player>().Damage(touchDamage, (collision.transform.position - transform.position) * touchKnockback);
         }
     }
 

@@ -58,7 +58,7 @@ public class Bullet : MonoBehaviour {
             {
                 if (creature.canDamage)
                 {
-                    Vector2 knockbackDir = -rb.velocity * knockback;
+                    Vector2 knockbackDir = rb.velocity * knockback;
                     creature.Damage(damage, knockbackDir);
                 }
                 /*else

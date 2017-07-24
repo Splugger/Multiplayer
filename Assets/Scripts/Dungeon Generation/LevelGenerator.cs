@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TileType { wall, floor, trap }
+public enum TileType { wall, floor, trap, stairs }
 
-public class GenerateDungeon : MonoBehaviour
+public class LevelGenerator : MonoBehaviour
 {
 
     public int minNumRooms = 3;
@@ -17,11 +17,15 @@ public class GenerateDungeon : MonoBehaviour
     public bool doubleHallwayWidth = true;
 
     public int numWalkers = 10;
-    public int numSwordsmen = 10;
-    public int numPistol = 3;
-    public int numMG = 1;
+    public int numSwordsmen = 6;
+    public int numGunners = 3;
 
-    public int numChests = 2;
+    public int numPickupChests = 5;
+    public int numWeaponChests = 2;
+    public int numAmmoDrops = 4;
+    public int numMedkitDrops = 4;
+
+    public Color levelColor = Color.white;
 
     List<Vector4> rooms = new List<Vector4>();
     bool[] roomConnected;
@@ -33,9 +37,11 @@ public class GenerateDungeon : MonoBehaviour
     CompositeCollider2D collider;
 
     // Use this for initialization
-    void Start()
+    public void Start()
     {
         collider = GetComponent<CompositeCollider2D>();
+
+        levelColor = new Color(Random.Range(0.1f, 0.4f), Random.Range(0.1f, 0.4f), Random.Range(0.1f, 0.4f), 1f);
 
         tileMap = new TileType[mapWidth, mapHeight];
 
@@ -45,18 +51,24 @@ public class GenerateDungeon : MonoBehaviour
             GenerateRoom();
         }
         GenerateHallways();
+        GenerateExit();
         DrawMap();
         collider.GenerateGeometry();
 
         //spawn resources
         SpawnOnMap(numWalkers, "Walker");
-        SpawnOnMap(numMG, "Machinegunner");
-        SpawnOnMap(numPistol, "Pistolier");
+        SpawnOnMap(numGunners, "Gunner");
         SpawnOnMap(numSwordsmen, "Swordsman");
-        SpawnOnMap(numChests, "Chest");
+        SpawnOnMap(numPickupChests, "Chest_Pickup");
+        SpawnOnMap(numWeaponChests, "Chest_Weapon");
+        SpawnOnMap(numAmmoDrops, "Item_Ammo");
+        SpawnOnMap(numMedkitDrops, "Item_Medkit");
 
-        //spawn players
+        SpawnPlayers();
+    }
 
+    void SpawnPlayers()
+    {
         Vector2 spawnPos = RandomMapPoint(TileType.floor) * gridSize;
         Collider2D[] cols = Physics2D.OverlapCircleAll(spawnPos, mapWidth);
         foreach (Collider2D col in cols)
@@ -69,7 +81,7 @@ public class GenerateDungeon : MonoBehaviour
                 {
                     if (hit.transform.gameObject.tag == "Enemy")
                     {
-                        spawnPos = RandomMapPoint(TileType.floor) * gridSize;
+                        Destroy(hit.transform.gameObject);
                     }
                 }
             }
@@ -78,7 +90,6 @@ public class GenerateDungeon : MonoBehaviour
         {
             obj.transform.position = spawnPos;
         }
-
     }
 
     void SpawnOnMap(int number, string name)
@@ -87,6 +98,13 @@ public class GenerateDungeon : MonoBehaviour
         {
             GameObject obj = Instantiate(Resources.Load(name) as GameObject);
             obj.transform.position = RandomMapPoint(TileType.floor) * gridSize;
+            if (obj.tag == "Enemy")
+            {
+                AI ai = obj.GetComponent<AI>();
+                ai.maxHealth = Random.Range(10f, 100f);
+                ai.health = ai.maxHealth;
+                ai.moveSpeed = Random.Range(0.5f, 2f);
+            }
         }
     }
 
@@ -118,20 +136,30 @@ public class GenerateDungeon : MonoBehaviour
             for (int y = 0; y < mapHeight; y++)
             {
                 GameObject tile = null;
+                string tileName = null;
                 switch (tileMap[x, y])
                 {
                     case TileType.wall:
-                        tile = Instantiate(Resources.Load("Tile_Wall") as GameObject);
+                        tileName = "Wall";
                         break;
                     case TileType.floor:
-                        tile = Instantiate(Resources.Load("Tile_Floor") as GameObject);
+                        tileName = "Floor";
                         break;
                     case TileType.trap:
-                        tile = Instantiate(Resources.Load("Tile_Trap") as GameObject);
+                        tileName = "Trap";
+                        break;
+                    case TileType.stairs:
+                        tileName = "Stairs";
                         break;
                 }
+                tile = Instantiate(Resources.Load("Tile_" + tileName) as GameObject);
                 tile.transform.position = new Vector2(x * gridSize, y * gridSize);
                 tile.transform.parent = transform;
+                SpriteRenderer sprite = tile.GetComponent<SpriteRenderer>();
+                if (tileName != "Wall")
+                {
+                    sprite.color = levelColor;
+                }
             }
         }
     }
@@ -232,6 +260,14 @@ public class GenerateDungeon : MonoBehaviour
                 if (doubleHallwayWidth) tileMap[midX + 1, pathVertical] = RandomTileType();
             }
         }
+    }
+
+    void GenerateExit()
+    {
+        Vector2 pos = RandomMapPoint(TileType.floor);
+
+        tileMap[(int)pos.x, (int)pos.y] = TileType.stairs;
+
     }
 
     TileType RandomTileType()

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CameraFollowPlayers : MonoBehaviour
 {
+    public static CameraFollowPlayers instance;
 
     public float followSpeed = 0.1f;
 
@@ -18,12 +19,27 @@ public class CameraFollowPlayers : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+
         cam = GetComponent<Camera>();
+        //start camera focused on player
+        Vector3 player1Pos = Game.control.playerObjs[0].transform.position;
+        transform.position = new Vector3(player1Pos.x, player1Pos.y, transform.position.z);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Game.control.playerObjs.Count == 0) return;
+
         float minX = 0f;
         float minY = 0f;
         float maxX = 0f;
@@ -74,9 +90,10 @@ public class CameraFollowPlayers : MonoBehaviour
         Collider2D[] nearbyCols = Physics2D.OverlapCircleAll(transform.position, enemyFocusDist);
         foreach (Collider2D col in nearbyCols)
         {
-            if (col.gameObject.GetComponent<Creature>() != null && col.gameObject.tag != "Player")
+            Creature creature = col.gameObject.GetComponent<Creature>();
+            if (creature != null && col.gameObject.tag != "Player")
             {
-                nearbyEnemies.Add(col.gameObject);
+                if (!creature.dead) nearbyEnemies.Add(col.gameObject);
             }
         }
         return nearbyEnemies.ToArray();

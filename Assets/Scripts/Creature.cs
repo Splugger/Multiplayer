@@ -16,9 +16,8 @@ public class Creature : MonoBehaviour {
 
     public bool canDamage = true;
 
-    public float moveSpeed = 3f;
+    public float moveSpeed = 2f;
     public float acceleration = 5f;
-    public float maxSpeed = 100f;
 
     public Vector2 desiredTranslation;
 
@@ -30,10 +29,11 @@ public class Creature : MonoBehaviour {
     float dodgeStaminaCost = 15f;
 
     public Rigidbody2D rb;
-    public Collider2D collider;
     public SpriteRenderer sprite;
     public Animator anim;
     public Shield shield;
+    public BoxCollider2D collider;
+    AudioSource source;
 
     Color color = Color.white;
 
@@ -43,13 +43,14 @@ public class Creature : MonoBehaviour {
     // Use this for initialization
     public virtual void Start () {
         rb = GetComponent<Rigidbody2D>();
-        collider = GetComponent<Collider2D>();
+        collider = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         shield = GetComponent<Shield>();
+        source = gameObject.AddComponent<AudioSource>();
 
         //set random color
-        SetColor(new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f));
+        SetColor(new Color(Random.Range(0.4f, 1f), Random.Range(0.4f, 1f), Random.Range(0.4f, 1f), 1f));
     }
 
     // Update is called once per frame
@@ -90,8 +91,7 @@ public class Creature : MonoBehaviour {
             RegenerateStamina(staminaRegen * Time.deltaTime);
         }
 
-
-        if (rb.velocity.magnitude < maxSpeed) Move(desiredTranslation);
+        Move(desiredTranslation);
         anim.SetFloat("Horizontal", horizontal);
         if (horizontal < 0f)
         {
@@ -148,6 +148,8 @@ public class Creature : MonoBehaviour {
         {
             StartCoroutine(Flash(0.1f, Color.white));
         }
+        source.pitch = Random.Range(0.8f, 1.2f);
+        source.PlayOneShot(Resources.Load("Sound_Hurt") as AudioClip);
     }
 
     public virtual void Die()

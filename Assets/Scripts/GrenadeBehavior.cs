@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grenade : MonoBehaviour
+public class GrenadeBehavior : MonoBehaviour
 {
 
     public float movementTime = 2f;

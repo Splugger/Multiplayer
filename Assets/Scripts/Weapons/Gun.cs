@@ -7,9 +7,6 @@ public class Gun : Weapon
     public float bulletSpeed = 200f;
     public float bulletSpread = 0.1f;
 
-    public int ammo = 100;
-    public int maxAmmo = 100;
-
     // Use this for initialization
     public override void Awake()
     {
@@ -34,7 +31,7 @@ public class Gun : Weapon
 
             //spawn bullet
             GameObject bulletObj = Instantiate(Resources.Load("Bullet") as GameObject);
-            bulletObj.transform.position = transform.position + normalAim * 0.2f + new Vector3(Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread), 0f);
+            bulletObj.transform.position = spriteTransform.position;//transform.position + normalAim * 0.2f + new Vector3(Random.Range(-bulletSpread, bulletSpread), Random.Range(-bulletSpread, bulletSpread), 0f);
             bulletObj.GetComponent<Rigidbody2D>().AddForce(normalAim * bulletSpeed);
 
             Bullet bullet = bulletObj.GetComponent<Bullet>();
@@ -45,17 +42,5 @@ public class Gun : Weapon
 
             UseAmmo(1);
         }
-    }
-
-    public void GainAmmo(int amount)
-    {
-        ammo += amount;
-        if (ammo > maxAmmo) ammo = maxAmmo;
-    }
-
-    public void UseAmmo(int amount)
-    {
-        ammo -= amount;
-        if (ammo < 0) ammo = 0;
     }
 }

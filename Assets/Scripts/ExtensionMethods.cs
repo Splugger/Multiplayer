@@ -118,7 +118,7 @@ public static class ExtensionMethods
         {
             if (simpleOnly)
             {
-                if (!(field.FieldType.IsPrimitive || field.FieldType.Equals(typeof(string))))
+                if (!(field.FieldType.IsPrimitive || field.FieldType.Equals(typeof(string)) || field.FieldType.Equals(typeof(Color))))
                 {
                     continue;
                 }
@@ -126,6 +126,16 @@ public static class ExtensionMethods
             field.SetValue(copy, field.GetValue(original));
         }
         return copy as T;
+    }
+
+    public static void SetLayerRecursively(this GameObject obj, int newLayer )
+    {
+        obj.layer = newLayer;
+
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
     }
 
 }

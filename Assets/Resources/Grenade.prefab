@@ -19,10 +19,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4201353263816726}
-  - component: {fileID: 212996780199975752}
   - component: {fileID: 50141824673029686}
   - component: {fileID: 58196148596147942}
   - component: {fileID: 114916738900638290}
+  - component: {fileID: 212842915084395676}
   m_Layer: 8
   m_Name: Grenade
   m_TagString: Bullet
@@ -37,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1182297886945580}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.282876, y: -17.25347, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalPosition: {x: -0.7321963, y: 9.627714, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -71,13 +71,13 @@ CircleCollider2D:
   m_GameObject: {fileID: 1182297886945580}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 9b10f59aa68deb241abbd2d6480356de, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.035
 --- !u!114 &114916738900638290
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -94,7 +94,7 @@ MonoBehaviour:
   collider: {fileID: 0}
   rb: {fileID: 0}
   sourceCollider: {fileID: 0}
---- !u!212 &212996780199975752
+--- !u!212 &212842915084395676
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -126,8 +126,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7874073ed127961428b36e40a254bd80, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.728}
+  m_Sprite: {fileID: 21300000, guid: 8b7ca2895dcdabe4e95cfb6c640b179b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

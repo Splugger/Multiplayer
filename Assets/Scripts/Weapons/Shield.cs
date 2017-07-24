@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shield : Weapon
 {
 
-    float stability = 0.4f;
+    public float stability = 0.4f;
 
     float holdTimer = 0f;
 
@@ -16,9 +16,9 @@ public class Shield : Weapon
         ShieldBehavior behavior = weaponObj.GetComponentInChildren<ShieldBehavior>();
         behavior.stability = stability;
 
-        weaponObj.SetActive(false);
-
         base.Awake();
+
+        weaponObj.SetActive(false);
     }
 
     // Update is called once per frame
@@ -44,5 +44,10 @@ public class Shield : Weapon
     {
         weaponObj.SetActive(true);
         holdTimer = 0.1f;
+    }
+
+    public override void SetPosition(int side)
+    {
+        
     }
 }

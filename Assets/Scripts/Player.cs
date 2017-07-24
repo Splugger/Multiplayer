@@ -16,6 +16,11 @@ public class Player : Creature
     // Use this for initialization
     public override void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
+        GameObject otherPlayer = GameObject.Find(name);
+        if (otherPlayer != gameObject) Destroy(otherPlayer);
+
         healthSliderObj = transform.FindDeepChild("healthSlider").gameObject;
         healthSlider = healthSliderObj.GetComponent<Slider>();
         staminaSliderObj = transform.FindDeepChild("staminaSlider").gameObject;

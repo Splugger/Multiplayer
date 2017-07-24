@@ -16,6 +16,9 @@ public class Weapon : MonoBehaviour
     public float recoil = 3f;
     public float range = 2f;
 
+    public int ammo = 100;
+    public int maxAmmo = 100;
+
     public float maxCooldown = 0.1f;
     public float cooldown = 0f;
 
@@ -25,10 +28,12 @@ public class Weapon : MonoBehaviour
     public AudioSource source;
 
     public Transform spriteTransform;
+    public SpriteRenderer sprite;
+    public Color color;
 
     public WeaponControl control;
 
-    Vector3 weaponObjOffset = new Vector3(0.00f, 0f, 0f);
+    Vector3 weaponObjOffset = new Vector3(0.08f, 0f, 0f);
 
     // Use this for initialization
     public virtual void Awake()
@@ -43,14 +48,27 @@ public class Weapon : MonoBehaviour
             control.weapons.Add(this);
 
             source = gameObject.AddComponent<AudioSource>();
-            spriteTransform = weaponObj.transform.FindDeepChild("Sprite");
         }
+    }
+
+    private void Start()
+    {
+        spriteTransform = weaponObj.transform.FindDeepChild("Sprite");
+        sprite = spriteTransform.GetComponentInChildren<SpriteRenderer>();
+        sprite.sortingOrder = 3;
+        sprite.color = color;
+
+        control.ResetWeaponPositions();
     }
 
     // Update is called once per frame
     public virtual void Update()
     {
-        if (creature == null) return;
+        if (creature == null)
+        {
+            if (ammo <= 0) DestroyWeapon();
+            return;
+        }
         if (creature.dead) return;
 
         if (aim.magnitude > 0f)
@@ -83,15 +101,27 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void Destroy()
+    public void DestroyWeapon()
     {
         Destroy(weaponObj);
         Destroy(source);
         Destroy(this);
     }
 
-    public void SetPosition(int side)
+    public virtual void SetPosition(int side)
     {
         weaponObj.transform.position = transform.position + weaponObjOffset * side;
+    }
+
+    public void GainAmmo(int amount)
+    {
+        ammo += amount;
+        if (ammo > maxAmmo) ammo = maxAmmo;
+    }
+
+    public void UseAmmo(int amount)
+    {
+        ammo -= amount;
+        if (ammo < 0) ammo = 0;
     }
 }

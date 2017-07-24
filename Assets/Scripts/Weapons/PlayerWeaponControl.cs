@@ -17,7 +17,6 @@ public class PlayerWeaponControl : WeaponControl
     // Use this for initialization
     public override void Start()
     {
-
         player = GetComponent<Player>();
         foreach (Weapon weapon in weapons)
         {
@@ -46,7 +45,6 @@ public class PlayerWeaponControl : WeaponControl
 
             if (Input.GetButton("Player " + player.playerNum + " " + weapon.useButton) && weapon.cooldown <= 0f)
             {
-                print(weapon);
                 weapon.Fire(weapon.aim);
             }
         }
@@ -63,10 +61,15 @@ public class PlayerWeaponControl : WeaponControl
             PickUpWeapon();
         }
 
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Game.control.NewLevel();
+        }
+
         //set ammo slider
         if (primary.GetType().IsAssignableFrom(typeof(Gun)))
         {
-            ammoSlider.value = (float)(((Gun)primary).ammo) / (float)((Gun)primary).maxAmmo;
+            ammoSlider.value = (float)primary.ammo / primary.maxAmmo;
         }
 
     }
@@ -80,9 +83,9 @@ public class PlayerWeaponControl : WeaponControl
             WeaponObject weaponObj = col.GetComponent<WeaponObject>();
             if (weaponObj != null)
             {
-                if (weapons.Count >= 2 || weapons.Count == 3 && weapons.Any(q => q is GrenadeWeapon))
+                if (weapons.Count >= 2 || weapons.Count == 3 && weapons.Any(q => q is Grenade))
                 {
-                    if (weaponObj.weapon.GetType().IsAssignableFrom(typeof(GrenadeWeapon)))
+                    if (weaponObj.weapon.GetType().IsAssignableFrom(typeof(Grenade)))
                     {
                         DropWeapon(thrown);
                     }
@@ -93,7 +96,7 @@ public class PlayerWeaponControl : WeaponControl
                 }
                 Weapon playerWeapon = weaponObj.weapon.CopyComponent(gameObject, true);
                 Destroy(col.gameObject);
-                if (weaponObj.weapon.GetType().IsAssignableFrom(typeof(GrenadeWeapon)))
+                if (weaponObj.weapon.GetType().IsAssignableFrom(typeof(Grenade)))
                 {
                     thrown = playerWeapon;
                 }

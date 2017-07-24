@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrenadeWeapon : Weapon
+public class Grenade : Weapon
 {
 
     public float throwStaminaCost = 10f;
@@ -12,9 +12,9 @@ public class GrenadeWeapon : Weapon
     {
         weaponObj = Instantiate(Resources.Load("GrenadeWeapon") as GameObject);
 
-        weaponObj.SetActive(false);
-
         base.Awake();
+
+        weaponObj.SetActive(false);
     }
 
     // Update is called once per frame
@@ -32,15 +32,18 @@ public class GrenadeWeapon : Weapon
     {
         base.Fire(aim);
 
-        if (creature.stamina > throwStaminaCost)
+        if (creature.stamina > throwStaminaCost && ammo > 0)
         {
             normalAim = Vector3.Normalize(aim);
 
             GameObject grenadeObj = Instantiate(Resources.Load("Grenade") as GameObject);
             grenadeObj.transform.position = transform.position + normalAim * 0.2f;
-            grenadeObj.GetComponent<Rigidbody2D>().AddForce(normalAim * range);
+            grenadeObj.GetComponent<Rigidbody2D>().AddForce(normalAim * range * 50);
+            grenadeObj.GetComponent<SpriteRenderer>().color = color;
 
             creature.UseStamina(throwStaminaCost);
+
+            UseAmmo(1);
         }
     }
 }

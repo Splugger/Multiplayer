@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 114135555607394312}
   - component: {fileID: 114741298820095750}
   - component: {fileID: 114161058062820824}
+  - component: {fileID: 114086008484367076}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -351,6 +352,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114086008484367076
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1602859231102622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b3b8859aa5b644cb66212d42aacdb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114135555607394312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -370,6 +382,8 @@ MonoBehaviour:
   knockback: 30
   recoil: 3
   range: 1
+  ammo: 100
+  maxAmmo: 100
   maxCooldown: 1
   cooldown: 0
   weaponObj: {fileID: 0}
@@ -377,6 +391,11 @@ MonoBehaviour:
   normalAim: {x: 0, y: 0, z: 0}
   source: {fileID: 0}
   spriteTransform: {fileID: 0}
+  sprite: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  control: {fileID: 0}
+  staminaCost: 10
+  slashWidth: 0
 --- !u!114 &114161058062820824
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -395,7 +414,9 @@ MonoBehaviour:
   damage: 10
   knockback: 3
   recoil: 3
-  range: 60
+  range: 1.2
+  ammo: 10
+  maxAmmo: 10
   maxCooldown: 1
   cooldown: 0
   weaponObj: {fileID: 0}
@@ -403,6 +424,9 @@ MonoBehaviour:
   normalAim: {x: 0, y: 0, z: 0}
   source: {fileID: 0}
   spriteTransform: {fileID: 0}
+  sprite: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  control: {fileID: 0}
   throwStaminaCost: 10
 --- !u!114 &114185572187880964
 MonoBehaviour:
@@ -701,6 +725,8 @@ MonoBehaviour:
   knockback: 3
   recoil: 3
   range: 2
+  ammo: 100
+  maxAmmo: 100
   maxCooldown: 0.1
   cooldown: 0
   weaponObj: {fileID: 0}
@@ -708,6 +734,10 @@ MonoBehaviour:
   normalAim: {x: 0, y: 0, z: 0}
   source: {fileID: 0}
   spriteTransform: {fileID: 0}
+  sprite: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  control: {fileID: 0}
+  stability: 0.4
 --- !u!114 &114750201423910846
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -782,15 +812,14 @@ MonoBehaviour:
   staminaCooldownTime: 1.5
   staminaCooldown: 0
   canDamage: 1
-  moveSpeed: 3
-  acceleration: 5
-  maxSpeed: 100
+  moveSpeed: 1.5
+  acceleration: 20
   desiredTranslation: {x: 0, y: 0}
   rb: {fileID: 0}
-  collider: {fileID: 0}
   sprite: {fileID: 0}
   anim: {fileID: 0}
   shield: {fileID: 0}
+  collider: {fileID: 0}
   horizontal: 0
   vertical: 0
   playerNum: 1
@@ -825,7 +854,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 7e0bbd9fe19f15f42bb1099114326cc9, type: 3}
   m_Color: {r: 0.20458478, g: 0.6287495, b: 0.64705884, a: 1}
   m_FlipX: 0
@@ -890,7 +919,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_TargetDisplay: 0
 --- !u!224 &224016636905540272
 RectTransform:

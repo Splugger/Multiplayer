@@ -15,8 +15,22 @@ public class WeaponControl : MonoBehaviour
     // Use this for initialization
     public virtual void Start()
     {
+        if (Time.timeSinceLevelLoad < Time.deltaTime)
+        {
+            for (int i = 0; i < weapons.Count; i++)
+            {
+                weapons[i] = Game.control.GenerateRandomWeapon(weapons[i]);
+
+                if (weapons[i].sprite != null)
+                {
+                    weapons[i].sprite.color = weapons[i].color;
+                }
+            }
+        }
+
         creature = GetComponent<Creature>();
         WeaponSetup();
+        ResetWeaponPositions();
     }
 
     // Update is called once per frame
@@ -45,32 +59,32 @@ public class WeaponControl : MonoBehaviour
         weapon.CopyComponent(obj, true);
         WeaponObject weaponObj = obj.GetComponent<WeaponObject>();
         weaponObj.weapon = weapon;
-        weapon.Destroy();
+        weapon.DestroyWeapon();
     }
 
     public virtual void WeaponSetup()
     {
-        if (weapons.Any(q => q is GrenadeWeapon))
+        if (weapons.Any(q => q is Grenade))
         {
-            thrown = weapons.OfType<GrenadeWeapon>().ToList()[0];
+            thrown = weapons.OfType<Grenade>().ToList()[0];
         }
         if (weapons.Count > 0)
         {
-            if (!weapons[0].GetType().IsAssignableFrom(typeof(GrenadeWeapon)))
+            if (!weapons[0].GetType().IsAssignableFrom(typeof(Grenade)))
             {
                 primary = weapons[0];
             }
         }
         if (weapons.Count > 1)
         {
-            if (!weapons[1].GetType().IsAssignableFrom(typeof(GrenadeWeapon)))
+            if (!weapons[1].GetType().IsAssignableFrom(typeof(Grenade)))
             {
                 secondary = weapons[1];
             }
         }
         if (weapons.Count > 2)
         {
-            if (!weapons[2].GetType().IsAssignableFrom(typeof(GrenadeWeapon)))
+            if (!weapons[2].GetType().IsAssignableFrom(typeof(Grenade)))
             {
                 if (secondary == null) secondary = weapons[2];
                 if (primary == null) primary = weapons[2];
