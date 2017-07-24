@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class CameraFollowPlayers : MonoBehaviour
 {
-    public static CameraFollowPlayers instance;
-
     public float followSpeed = 0.1f;
 
     float minCamSize = 1f;
@@ -19,16 +17,6 @@ public class CameraFollowPlayers : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-
         cam = GetComponent<Camera>();
         //start camera focused on player
         Vector3 player1Pos = Game.control.playerObjs[0].transform.position;

@@ -18,13 +18,15 @@ public class Game : MonoBehaviour
 
     public List<GameObject> playerObjs = new List<GameObject>();
 
+    int levelsCleared = 0;
+
     // Use this for initialization
     void Awake()
     {
         if (control == null)
         {
-            control = this;
             DontDestroyOnLoad(gameObject);
+            control = this;
         }
         else if (control != this)
         {
@@ -34,9 +36,31 @@ public class Game : MonoBehaviour
         camObj = GameObject.FindWithTag("MainCamera");
         screenShake = camObj.GetComponent<ScreenShake>();
 
-        levelGenerator = GetComponentInChildren<LevelGenerator>();
+        levelGenerator = GameObject.Find("Level Generator").GetComponent<LevelGenerator>();
+        print(levelsCleared);
 
-        playerObjs = GameObject.FindGameObjectsWithTag("Player").ToList();
+        if (levelsCleared == 0)
+        {
+            playerObjs = GameObject.FindGameObjectsWithTag("Player").ToList();
+
+            foreach (GameObject playerObj in playerObjs)
+            {
+                DontDestroyOnLoad(playerObj);
+            }
+        }
+    }
+
+    public void DestroyExtraPlayers()
+    {
+        //destroy all but original players
+        List<GameObject> newPlayerObjs = GameObject.FindGameObjectsWithTag("Player").ToList();
+        foreach (GameObject newPlayerObj in newPlayerObjs)
+        {
+            if (!playerObjs.Contains(newPlayerObj))
+            {
+                Destroy(newPlayerObj);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -147,6 +171,8 @@ public class Game : MonoBehaviour
 
     public void NewLevel()
     {
+        levelsCleared++;
         SceneManager.LoadScene("Procedural");
+        DestroyExtraPlayers();
     }
 }

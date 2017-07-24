@@ -61,7 +61,7 @@ public class PlayerWeaponControl : WeaponControl
             PickUpWeapon();
         }
 
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L) && player.playerNum == 1)
         {
             Game.control.NewLevel();
         }
