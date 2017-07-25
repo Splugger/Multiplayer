@@ -37,7 +37,6 @@ public class Game : MonoBehaviour
         screenShake = camObj.GetComponent<ScreenShake>();
 
         levelGenerator = GameObject.Find("Level Generator").GetComponent<LevelGenerator>();
-        print(levelsCleared);
 
         if (levelsCleared == 0)
         {
@@ -96,19 +95,19 @@ public class Game : MonoBehaviour
         if (objName != "Weapon") return;
 
         Weapon weapon = null;
-        switch (Random.Range(0, 4))
+        switch (Random.Range(0, 6))
         {
             case 0:
                 weapon = itemObj.AddComponent<Grenade>();
                 break;
             case 1:
-                weapon = itemObj.AddComponent<Gun>();
-                break;
-            case 2:
                 weapon = itemObj.AddComponent<Melee>();
                 break;
-            case 3:
+            case 2:
                 weapon = itemObj.AddComponent<Shield>();
+                break;
+            default:
+                weapon = itemObj.AddComponent<Gun>();
                 break;
         }
         itemObj.GetComponent<WeaponObject>().weapon = weapon;
@@ -165,6 +164,8 @@ public class Game : MonoBehaviour
         }
         weapon.ammo = weapon.maxAmmo;
         weapon.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
+
+        weapon.SetSprite();
 
         return weapon;
     }

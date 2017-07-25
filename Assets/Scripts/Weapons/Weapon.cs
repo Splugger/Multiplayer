@@ -28,7 +28,8 @@ public class Weapon : MonoBehaviour
     public AudioSource source;
 
     public Transform spriteTransform;
-    public SpriteRenderer sprite;
+    public SpriteRenderer spriteRenderer;
+    public Sprite sprite;
     public Color color;
 
     public WeaponControl control;
@@ -54,9 +55,9 @@ public class Weapon : MonoBehaviour
     private void Start()
     {
         spriteTransform = weaponObj.transform.FindDeepChild("Sprite");
-        sprite = spriteTransform.GetComponentInChildren<SpriteRenderer>();
-        sprite.sortingOrder = 3;
-        sprite.color = color;
+        spriteRenderer = spriteTransform.GetComponentInChildren<SpriteRenderer>();
+        spriteRenderer.sortingOrder = 3;
+        spriteRenderer.color = color;
 
         control.ResetWeaponPositions();
     }
@@ -64,12 +65,14 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
+        if (sprite != null) spriteRenderer.sprite = sprite;
+
         if (creature == null)
         {
             if (ammo <= 0) DestroyWeapon();
             return;
         }
-        if (creature.dead) return;
+        if (creature.dead) control.DropWeapon(this);
 
         if (aim.magnitude > 0f)
         {
@@ -123,5 +126,10 @@ public class Weapon : MonoBehaviour
     {
         ammo -= amount;
         if (ammo < 0) ammo = 0;
+    }
+
+    public virtual void SetSprite()
+    {
+        if (sprite != null) spriteRenderer.sprite = sprite;
     }
 }

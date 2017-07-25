@@ -57,8 +57,19 @@ public class Player : Creature
 
     public override void Die()
     {
-        Game.control.playerObjs.Remove(gameObject);
-
         base.Die();
+    }
+
+    public void UpdateVision()
+    {
+        foreach (GameObject tile in Game.control.levelGenerator.floorTiles)
+        {
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, tile.transform.position);
+            if (hit)
+            {
+                GameObject fogOfWar = Instantiate(Resources.Load("Tile_Dark") as GameObject);
+                fogOfWar.transform.position = tile.transform.position;
+            }
+        }
     }
 }

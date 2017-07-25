@@ -4,8 +4,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum StartEquipment { swordAndShield, gun }
+
 public class PlayerWeaponControl : WeaponControl
 {
+
+    public StartEquipment startEquipment = StartEquipment.gun;
+    public bool startWithGrenade = true;
 
     Player player;
 
@@ -13,6 +18,26 @@ public class PlayerWeaponControl : WeaponControl
 
     GameObject ammoSliderObj;
     Slider ammoSlider;
+
+    private void Awake()
+    {
+        if (startEquipment == StartEquipment.gun)
+        {
+            primary = gameObject.AddComponent<Gun>();
+        }
+        if (startEquipment == StartEquipment.swordAndShield)
+        {
+            primary = gameObject.AddComponent<Melee>();
+            secondary = gameObject.AddComponent<Shield>();
+        }
+        if (startWithGrenade)
+        {
+            thrown = gameObject.AddComponent<Grenade>();
+        }
+
+        ResetWeaponControls();
+        ResetWeaponPositions();
+    }
 
     // Use this for initialization
     public override void Start()
@@ -83,7 +108,7 @@ public class PlayerWeaponControl : WeaponControl
             WeaponObject weaponObj = col.GetComponent<WeaponObject>();
             if (weaponObj != null)
             {
-                if (weapons.Count >= 2 || weapons.Count == 3 && weapons.Any(q => q is Grenade))
+                if (secondary != null && primary != null)
                 {
                     if (weaponObj.weapon.GetType().IsAssignableFrom(typeof(Grenade)))
                     {
@@ -102,7 +127,10 @@ public class PlayerWeaponControl : WeaponControl
                 }
                 else
                 {
-                    primary = playerWeapon;
+                    if (secondary != null)
+                        primary = playerWeapon;
+                    else
+                        secondary = playerWeapon;
                 }
                 ResetWeaponControls();
             }
@@ -111,11 +139,14 @@ public class PlayerWeaponControl : WeaponControl
 
     public void ChangeWeapons()
     {
-        Weapon temp = primary;
-        primary = secondary;
-        secondary = temp;
-        ResetWeaponControls();
-        ResetWeaponPositions();
+        if (secondary != null)
+        {
+            Weapon temp = primary;
+            primary = secondary;
+            secondary = temp;
+            ResetWeaponControls();
+            ResetWeaponPositions();
+        }
     }
 
     public void ResetWeaponControls()
@@ -126,7 +157,8 @@ public class PlayerWeaponControl : WeaponControl
         }
         if (weapons.Count > 1)
         {
-            secondary.useButton = "Fire2";
+            if (secondary != null) secondary.useButton = "Fire2";
+            if (thrown != null) thrown.useButton = "Grenade";
         }
         if (weapons.Count > 2)
         {

@@ -118,7 +118,7 @@ public static class ExtensionMethods
         {
             if (simpleOnly)
             {
-                if (!(field.FieldType.IsPrimitive || field.FieldType.Equals(typeof(string)) || field.FieldType.Equals(typeof(Color))))
+                if (!(field.FieldType.IsPrimitive || field.FieldType.Equals(typeof(string)) || field.FieldType.Equals(typeof(Color)) || field.FieldType.Equals(typeof(Sprite))))
                 {
                     continue;
                 }
@@ -128,7 +128,7 @@ public static class ExtensionMethods
         return copy as T;
     }
 
-    public static void SetLayerRecursively(this GameObject obj, int newLayer )
+    public static void SetLayerRecursively(this GameObject obj, int newLayer)
     {
         obj.layer = newLayer;
 
@@ -138,4 +138,14 @@ public static class ExtensionMethods
         }
     }
 
+    public static Color Complimentary(this Color color)
+    {
+        float h;
+        float s;
+        float v;
+        Color.RGBToHSV(color, out h, out s, out v);
+        h -= 0.5f;
+        Color compliment = Color.HSVToRGB(h, s, v);
+        return compliment;
+    }
 }

@@ -26,6 +26,7 @@ public class LevelGenerator : MonoBehaviour
     public int numMedkitDrops = 4;
 
     public Color levelColor = Color.white;
+    public Color wallColor = Color.white;
 
     List<Vector4> rooms = new List<Vector4>();
     bool[] roomConnected;
@@ -33,6 +34,8 @@ public class LevelGenerator : MonoBehaviour
     float gridSize = 0.16f;
     int numRooms;
     TileType[,] tileMap;
+    public List<GameObject> floorTiles = new List<GameObject>();
+    List<WallAppearance> walls = new List<WallAppearance>();
 
     CompositeCollider2D collider;
 
@@ -42,6 +45,18 @@ public class LevelGenerator : MonoBehaviour
         collider = GetComponent<CompositeCollider2D>();
 
         levelColor = new Color(Random.Range(0.1f, 0.4f), Random.Range(0.1f, 0.4f), Random.Range(0.1f, 0.4f), 1f);
+
+        //set wall color to darkened level color or its compliment
+        switch (Random.Range(0, 2))
+        {
+            case 0:
+                float levelColorIntensity = Mathf.Max(levelColor.r, levelColor.g, levelColor.b);
+                wallColor = new Color(Random.Range(0.1f, levelColorIntensity), Random.Range(0.1f, levelColorIntensity), Random.Range(0.1f, levelColorIntensity), 1f);
+                break;
+            case 1:
+                wallColor = levelColor.Complimentary();
+                break;
+        }
 
         tileMap = new TileType[mapWidth, mapHeight];
 
@@ -53,6 +68,15 @@ public class LevelGenerator : MonoBehaviour
         GenerateHallways();
         GenerateExit();
         DrawMap();
+        foreach (WallAppearance wall in walls)
+        {
+            wall.SetAppearance();
+        }
+        foreach (WallAppearance wall in walls)
+        {
+            wall.collider.usedByComposite = true;
+        }
+
         collider.GenerateGeometry();
 
         //spawn resources
@@ -152,13 +176,36 @@ public class LevelGenerator : MonoBehaviour
                         tileName = "Stairs";
                         break;
                 }
-                tile = Instantiate(Resources.Load("Tile_" + tileName) as GameObject);
-                tile.transform.position = new Vector2(x * gridSize, y * gridSize);
-                tile.transform.parent = transform;
-                SpriteRenderer sprite = tile.GetComponent<SpriteRenderer>();
-                if (tileName != "Wall")
+
+                //spawn floor tiles in all positions
+                GameObject floor = Instantiate(Resources.Load("Tile_Floor") as GameObject);
+                floor.transform.position = new Vector2(x * gridSize, y * gridSize);
+                floor.transform.parent = transform;
+                SpriteRenderer floorSprite = floor.GetComponent<SpriteRenderer>();
+                floorSprite.color = levelColor;
+
+                //add floor tile to list of floor tiles
+                floorTiles.Add(floor);
+
+                if (tileName != "Floor")
                 {
-                    sprite.color = levelColor;
+                    tile = Instantiate(Resources.Load("Tile_" + tileName) as GameObject);
+                    tile.transform.position = new Vector2(x * gridSize, y * gridSize);
+                    tile.transform.parent = transform;
+                }
+
+                if (tile != null)
+                {
+                    SpriteRenderer sprite = tile.GetComponent<SpriteRenderer>();
+                    if (tileName != "Wall")
+                    {
+                        sprite.color = levelColor;
+                    }
+                    else
+                    {
+                        walls.Add(tile.GetComponent<WallAppearance>());
+                        sprite.color = wallColor;
+                    }
                 }
             }
         }

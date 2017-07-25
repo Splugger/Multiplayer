@@ -7,6 +7,10 @@ public class CameraFollowPlayers : MonoBehaviour
 {
     public float followSpeed = 0.1f;
 
+    public bool zoom = false;
+
+    bool followPlayer1 = false;
+
     float minCamSize = 1f;
     float screenEdgeDist = 1f;
     float enemyFocusDist = 1f;
@@ -21,6 +25,8 @@ public class CameraFollowPlayers : MonoBehaviour
         //start camera focused on player
         Vector3 player1Pos = Game.control.playerObjs[0].transform.position;
         transform.position = new Vector3(player1Pos.x, player1Pos.y, transform.position.z);
+
+        cam.backgroundColor = Game.control.levelGenerator.wallColor;
     }
 
     // Update is called once per frame
@@ -36,7 +42,7 @@ public class CameraFollowPlayers : MonoBehaviour
         List<float> playerPositionsX = new List<float>();
         List<float> playerPositionsY = new List<float>();
 
-        foreach (GameObject playerObj in Game.control.playerObjs)
+        for (int i = 0; i < Game.control.playerObjs.Count; i++)
         {
             foreach (GameObject obj in FindNearbyEnemies())
             {
@@ -44,9 +50,11 @@ public class CameraFollowPlayers : MonoBehaviour
                 playerPositionsY.Add(obj.transform.position.y);
             }
 
+            if (followPlayer1 && i != 0) break;
+
             //find min and max x and y values
-            playerPositionsX.Add(playerObj.transform.position.x);
-            playerPositionsY.Add(playerObj.transform.position.y);
+            playerPositionsX.Add(Game.control.playerObjs[i].transform.position.x);
+            playerPositionsY.Add(Game.control.playerObjs[i].transform.position.y);
         }
 
         minX = Mathf.Min(playerPositionsX.ToArray());
@@ -67,7 +75,14 @@ public class CameraFollowPlayers : MonoBehaviour
         //zoom
         if (sizeY + screenEdgeDist > minCamSize || sizeX + screenEdgeDist > minCamSize)
         {
-            cam.orthographicSize = Mathf.Max(sizeY + screenEdgeDist, sizeX + screenEdgeDist);
+            if (zoom)
+            {
+                cam.orthographicSize = Mathf.Max(sizeY + screenEdgeDist, sizeX + screenEdgeDist);
+            }
+            else
+            {
+                followPlayer1 = true;
+            }
         }
     }
 

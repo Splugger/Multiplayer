@@ -18,6 +18,15 @@ public class Gun : Weapon
     // Update is called once per frame
     public override void Update()
     {
+        if (aim.x < 0)
+        {
+            spriteRenderer.flipY = true;
+        }
+        else
+        {
+            spriteRenderer.flipY = false;
+        }
+
         base.Update();
     }
 
@@ -42,5 +51,32 @@ public class Gun : Weapon
 
             UseAmmo(1);
         }
+    }
+
+    public override void SetSprite()
+    {
+        if (maxCooldown < 0.5f)
+        {
+            if (damage < 15f || maxCooldown > 0.35f)
+            {
+                sprite = Resources.Load<Sprite>("AssaultRifle");
+            }
+            else
+            {
+                sprite = Resources.Load<Sprite>("MachineGun");
+            }
+        }
+        else
+        {
+            if (damage < 15f || range < 2)
+            {
+                sprite = Resources.Load<Sprite>("Pistol");
+            }
+            else
+            {
+                sprite = Resources.Load<Sprite>("Rifle");
+            }
+        }
+        base.SetSprite();
     }
 }

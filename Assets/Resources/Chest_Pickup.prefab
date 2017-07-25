@@ -111,8 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d93efd9563353248842df0cb17088c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openSprite: {fileID: 21300000, guid: 96375e5e689f2584da560a777c6580e0, type: 3}
-  closedSprite: {fileID: 21300000, guid: aa0b31c6bf531724da988cdcb3d8391b, type: 3}
+  type: 0
+  openSprite: {fileID: 21300000, guid: 83ffafbd0bca808478cf3c0af5667ace, type: 3}
+  closedSprite: {fileID: 21300000, guid: 0e8e9ff33e1ae6b44b06981f0d4f190d, type: 3}
 --- !u!212 &212231150618117582
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -145,7 +146,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: aa0b31c6bf531724da988cdcb3d8391b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0e8e9ff33e1ae6b44b06981f0d4f190d, type: 3}
   m_Color: {r: 0.5661765, g: 0.43181005, b: 0.19150089, a: 1}
   m_FlipX: 0
   m_FlipY: 0

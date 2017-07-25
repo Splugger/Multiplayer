@@ -21,9 +21,9 @@ public class WeaponControl : MonoBehaviour
             {
                 weapons[i] = Game.control.GenerateRandomWeapon(weapons[i]);
 
-                if (weapons[i].sprite != null)
+                if (weapons[i].spriteRenderer != null)
                 {
-                    weapons[i].sprite.color = weapons[i].color;
+                    weapons[i].spriteRenderer.color = weapons[i].color;
                 }
             }
         }
@@ -36,16 +36,7 @@ public class WeaponControl : MonoBehaviour
     // Update is called once per frame
     public virtual void Update()
     {
-        if (creature != null)
-        {
-            if (creature.dead)
-            {
-                foreach (Weapon weapon in weapons)
-                {
-                    DropWeapon(weapon);
-                }
-            }
-        }
+
     }
 
     public void DropWeapon(Weapon weapon)

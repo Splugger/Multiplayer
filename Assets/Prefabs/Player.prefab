@@ -221,9 +221,6 @@ GameObject:
   - component: {fileID: 114681800402636200}
   - component: {fileID: 95974133627052562}
   - component: {fileID: 61079330801211800}
-  - component: {fileID: 114135555607394312}
-  - component: {fileID: 114741298820095750}
-  - component: {fileID: 114161058062820824}
   - component: {fileID: 114086008484367076}
   m_Layer: 0
   m_Name: Player
@@ -363,71 +360,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09b3b8859aa5b644cb66212d42aacdb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114135555607394312
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1602859231102622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bd53292840960d41b521ed4c49332e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  creature: {fileID: 0}
-  useButton: Fire1
-  vertical: 0
-  horizontal: 0
-  damage: 10
-  knockback: 30
-  recoil: 3
-  range: 1
-  ammo: 100
-  maxAmmo: 100
-  maxCooldown: 1
-  cooldown: 0
-  weaponObj: {fileID: 0}
-  aim: {x: 0, y: 0, z: 0}
-  normalAim: {x: 0, y: 0, z: 0}
-  source: {fileID: 0}
-  spriteTransform: {fileID: 0}
-  sprite: {fileID: 0}
-  color: {r: 0, g: 0, b: 0, a: 0}
-  control: {fileID: 0}
-  staminaCost: 10
-  slashWidth: 0
---- !u!114 &114161058062820824
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1602859231102622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a6e77130c5acd941bcffbdc10667ad2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  creature: {fileID: 0}
-  useButton: Grenade
-  vertical: 0
-  horizontal: 0
-  damage: 10
-  knockback: 3
-  recoil: 3
-  range: 1.2
-  ammo: 10
-  maxAmmo: 10
-  maxCooldown: 1
-  cooldown: 0
-  weaponObj: {fileID: 0}
-  aim: {x: 0, y: 0, z: 0}
-  normalAim: {x: 0, y: 0, z: 0}
-  source: {fileID: 0}
-  spriteTransform: {fileID: 0}
-  sprite: {fileID: 0}
-  color: {r: 0, g: 0, b: 0, a: 0}
-  control: {fileID: 0}
-  throwStaminaCost: 10
 --- !u!114 &114185572187880964
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -706,38 +638,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114741298820095750
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1602859231102622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da243823b0d8fea4cbbb673b47285299, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  creature: {fileID: 0}
-  useButton: Fire2
-  vertical: 0
-  horizontal: 0
-  damage: 10
-  knockback: 3
-  recoil: 3
-  range: 2
-  ammo: 100
-  maxAmmo: 100
-  maxCooldown: 0.1
-  cooldown: 0
-  weaponObj: {fileID: 0}
-  aim: {x: 0, y: 0, z: 0}
-  normalAim: {x: 0, y: 0, z: 0}
-  source: {fileID: 0}
-  spriteTransform: {fileID: 0}
-  sprite: {fileID: 0}
-  color: {r: 0, g: 0, b: 0, a: 0}
-  control: {fileID: 0}
-  stability: 0.4
 --- !u!114 &114750201423910846
 MonoBehaviour:
   m_ObjectHideFlags: 1
