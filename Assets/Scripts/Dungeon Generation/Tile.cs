@@ -41,7 +41,7 @@ public class Tile
         color = spriteRenderer.color;
     }
 
-    public void CanSee(bool state)
+    public void SetVisible(bool state)
     {
         if (state == false)
         {

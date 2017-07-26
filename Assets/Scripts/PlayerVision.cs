@@ -6,7 +6,8 @@ using UnityEngine;
 public class PlayerVision : MonoBehaviour
 {
 
-    public float playerViewDist = 1f;
+    public float playerViewDist = 3f;
+    public float wallRevealDist = 0.3f;
 
     int wallsMask;
 
@@ -16,7 +17,7 @@ public class PlayerVision : MonoBehaviour
     public void Start()
     {
         wallsMask = LayerMask.GetMask("Walls");
-        InvokeRepeating("CalculateVision", 0f, 2f);
+        InvokeRepeating("CalculateVision", 0f, 0.5f);
     }
 
     // Update is called once per frame
@@ -30,48 +31,43 @@ public class PlayerVision : MonoBehaviour
         //calculate player vision
         foreach (GameObject playerObj in Game.control.playerObjs)
         {
-            for (int x = 0; x < Game.control.levelGenerator.mapWidth; x++)
+            foreach (Tile tile in Game.control.levelGenerator.tiles)
             {
-                for (int y = 0; y < Game.control.levelGenerator.mapHeight; y++)
+                if (tile.tileObj != null)
                 {
-                    Tile tile = Game.control.levelGenerator.tiles.SingleOrDefault(q => q.x == x && q.y == y);
-                    if (tile != null)
+                    Vector3 playerPos = playerObj.transform.position;
+                    Vector3 tilePos = tile.tileObj.transform.position;
+                    float distance = (playerPos - tilePos).sqrMagnitude;
+                    if (distance < playerViewDist)
                     {
-                        if (tile.tileObj != null)
+                        BoxCollider2D collider = tile.tileObj.GetComponent<BoxCollider2D>();
+                        RaycastHit2D hit = Physics2D.Linecast(playerPos, tilePos, wallsMask);
+                        if (hit)
                         {
-                            Vector3 playerPos = playerObj.transform.position;
-                            Vector3 tilePos = tile.tileObj.transform.position;
-                            float distance = (playerPos - tilePos).magnitude;
-                            if (distance < playerViewDist)
+                            Bounds checkBox = new Bounds(tile.tileObj.transform.position, Vector3.one * wallRevealDist);
+                            //disable tile at current search position if the hit tile is not the tile you're looking for
+                            if (!(checkBox.Contains(hit.point)))
                             {
-                                BoxCollider2D collider = tile.tileObj.GetComponent<BoxCollider2D>();
-                                RaycastHit2D hit = Physics2D.Linecast(playerPos, tilePos);
-                                if (hit)
-                                {
-                                    Bounds checkBox = new Bounds(tile.tileObj.transform.position, Vector3.one * 0.2f);
-                                    //disable tile at current search position if the hit tile is not the tile you're looking for
-                                    if (!(checkBox.Contains(hit.point)))
-                                    {
-                                        SetTileVisibleAtPoint(x, y, false);
-                                    }
-                                    else
-                                    {
-                                        SetTileVisibleAtPoint(x, y, true);
-                                    }
-                                }
-                                else
-                                {
-                                    SetTileVisibleAtPoint(x, y, true);
-                                }
+                                tile.SetVisible(false);
+                            }
+                            else
+                            {
+                                tile.SetVisible(true);
                             }
                         }
+                        else
+                        {
+                            tile.SetVisible(true);
+                        }
+                    }
+                    else
+                    {
+                        tile.SetVisible(false);
                     }
                 }
             }
         }
     }
-    void SetTileVisibleAtPoint(int x, int y, bool state)
-    {
-        Game.control.levelGenerator.tiles.SingleOrDefault(q => q.x == x && q.y == y).CanSee(state);
-    }
 }
+
+
