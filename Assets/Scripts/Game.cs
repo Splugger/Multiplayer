@@ -20,6 +20,8 @@ public class Game : MonoBehaviour
 
     int levelsCleared = 0;
 
+    PlayerVision playerVision;
+
     // Use this for initialization
     void Awake()
     {
@@ -37,6 +39,8 @@ public class Game : MonoBehaviour
         screenShake = camObj.GetComponent<ScreenShake>();
 
         levelGenerator = GameObject.Find("Level Generator").GetComponent<LevelGenerator>();
+
+        playerVision = GetComponent<PlayerVision>();
 
         if (levelsCleared == 0)
         {
@@ -175,5 +179,6 @@ public class Game : MonoBehaviour
         levelsCleared++;
         SceneManager.LoadScene("Procedural");
         DestroyExtraPlayers();
+        playerVision.Start();
     }
 }

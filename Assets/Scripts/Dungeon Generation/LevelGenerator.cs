@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum TileType { wall, floor, trap, stairs }
@@ -28,16 +29,16 @@ public class LevelGenerator : MonoBehaviour
     public Color levelColor = Color.white;
     public Color wallColor = Color.white;
 
-    List<Vector4> rooms = new List<Vector4>();
+    List<Room> rooms = new List<Room>();
     bool[] roomConnected;
 
     float gridSize = 0.16f;
     int numRooms;
-    TileType[,] tileMap;
+    public TileType[,] tileMap;
     public List<GameObject> floorTiles = new List<GameObject>();
-    List<WallAppearance> walls = new List<WallAppearance>();
+    public List<Tile> tiles = new List<Tile>();
 
-    CompositeCollider2D collider;
+    public CompositeCollider2D collider;
 
     // Use this for initialization
     public void Start()
@@ -68,13 +69,17 @@ public class LevelGenerator : MonoBehaviour
         GenerateHallways();
         GenerateExit();
         DrawMap();
-        foreach (WallAppearance wall in walls)
+
+        List<Tile> walls = tiles.Where(q => q.type == TileType.wall).ToList();
+        foreach (Tile wall in walls)
         {
-            wall.SetAppearance();
+            if (TileHasNeighborOfType(wall.x, wall.y, TileType.floor))
+                wall.tileObj.GetComponent<WallAppearance>().SetAppearance();
+            wall.SetSpriteProperties();
         }
-        foreach (WallAppearance wall in walls)
+        foreach (Tile wall in walls)
         {
-            wall.collider.usedByComposite = true;
+            wall.tileObj.GetComponent<WallAppearance>().collider.usedByComposite = true;
         }
 
         collider.GenerateGeometry();
@@ -137,6 +142,15 @@ public class LevelGenerator : MonoBehaviour
         int width = Random.Range(minRoomSize, maxRoomSize);
         int height = Random.Range(minRoomSize, maxRoomSize);
         Vector2 position = RandomMapPoint(0);
+        Room room = new Room((int)position.x, (int)position.y, width, height);
+
+        /*if (RoomIsOverlapping(room))
+        {
+            print("RoomIsOverlapping");
+            GenerateRoom();
+        }*/
+
+        rooms.Add(room);
 
         for (int x = 0; x < width; x++)
         {
@@ -148,8 +162,6 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
-
-        rooms.Add(new Vector4((int)position.x, (int)position.y, width, height));
     }
 
     void DrawMap()
@@ -159,9 +171,10 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int y = 0; y < mapHeight; y++)
             {
-                GameObject tile = null;
+                GameObject tileObj = null;
                 string tileName = null;
-                switch (tileMap[x, y])
+                TileType type = tileMap[x, y];
+                switch (type)
                 {
                     case TileType.wall:
                         tileName = "Wall";
@@ -187,23 +200,24 @@ public class LevelGenerator : MonoBehaviour
                 //add floor tile to list of floor tiles
                 floorTiles.Add(floor);
 
-                if (tileName != "Floor")
-                {
-                    tile = Instantiate(Resources.Load("Tile_" + tileName) as GameObject);
-                    tile.transform.position = new Vector2(x * gridSize, y * gridSize);
-                    tile.transform.parent = transform;
-                }
+                tileObj = Instantiate(Resources.Load("Tile_" + tileName) as GameObject);
+                tileObj.transform.position = new Vector2(x * gridSize, y * gridSize);
+                tileObj.transform.parent = transform;
 
-                if (tile != null)
+                if (tileObj != null)
                 {
-                    SpriteRenderer sprite = tile.GetComponent<SpriteRenderer>();
+                    //add to list of tiles
+                    Tile tile = new Tile(x, y, type, tileObj);
+                    tiles.Add(tile);
+
+                    SpriteRenderer sprite = tileObj.GetComponent<SpriteRenderer>();
                     if (tileName != "Wall")
                     {
-                        sprite.color = levelColor;
+                        tile.color = levelColor;
                     }
                     else
                     {
-                        walls.Add(tile.GetComponent<WallAppearance>());
+                        tileObj.GetComponent<WallAppearance>().tile = tile;
                         sprite.color = wallColor;
                     }
                 }
@@ -233,10 +247,10 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < numRooms; i++)
         {
             //find position of room
-            int x1 = (int)rooms[i].x;
-            int y1 = (int)rooms[i].y;
-            int w1 = (int)rooms[i].z;
-            int h1 = (int)rooms[i].w;
+            int x1 = rooms[i].x;
+            int y1 = rooms[i].y;
+            int w1 = rooms[i].w;
+            int h1 = rooms[i].h;
 
             int minDist = mapWidth + mapHeight;
             int closestRoomIndex = 0;
@@ -244,8 +258,8 @@ public class LevelGenerator : MonoBehaviour
             //look through all rooms
             for (int r = 0; r < numRooms - 1; r++)
             {
-                int x = (int)rooms[r].x;
-                int y = (int)rooms[r].y;
+                int x = rooms[r].x;
+                int y = rooms[r].y;
 
                 //check if room is nearby
                 if (Mathf.Abs(x1 - x) + Mathf.Abs(y1 - y) < minDist && r != i && !roomConnected[r])
@@ -256,10 +270,10 @@ public class LevelGenerator : MonoBehaviour
             }
 
             //compare to nearest room
-            int x2 = (int)rooms[closestRoomIndex].x;
-            int y2 = (int)rooms[closestRoomIndex].y;
-            int w2 = (int)rooms[closestRoomIndex].z;
-            int h2 = (int)rooms[closestRoomIndex].w;
+            int x2 = rooms[closestRoomIndex].x;
+            int y2 = rooms[closestRoomIndex].y;
+            int w2 = rooms[closestRoomIndex].w;
+            int h2 = rooms[closestRoomIndex].h;
 
             roomConnected[i] = true;
             roomConnected[closestRoomIndex] = true;
@@ -326,6 +340,47 @@ public class LevelGenerator : MonoBehaviour
             default:
                 return TileType.floor;
         }
+    }
+
+    bool RoomIsOverlapping(Room room)
+    {
+        int xPos = room.x;
+        int yPos = room.y;
+        int width = room.w;
+        int height = room.h;
+
+        for (int x = xPos - 1; x < xPos + width + 1; x++)
+        {
+            for (int y = yPos - 1; y < yPos + height + 1; y++)
+            {
+                if (x != 0 && y != 0 && x != mapWidth && y != mapHeight)
+                {
+                    if (tileMap[x, y] == TileType.floor)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    bool TileHasNeighborOfType(int xPos, int yPos, TileType tile)
+    {
+        for (int x = xPos - 1; x <= xPos + 1; x++)
+        {
+            for (int y = yPos - 1; y <= yPos + 1; y++)
+            {
+                if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight)
+                {
+                    if (x != xPos || y != yPos)
+                    {
+                        if (tileMap[x, y] == tile) return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
 

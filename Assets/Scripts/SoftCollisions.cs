@@ -8,6 +8,7 @@ public class SoftCollisions : MonoBehaviour {
     Vector2 originalColliderSize;
     float collisionTimer = 0f;
     float maxCollisionTimer = 0.1f;
+    float minSize = 0.02f;
 
     // Use this for initialization
     void Start () {
@@ -30,10 +31,10 @@ public class SoftCollisions : MonoBehaviour {
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        Creature creature = collision.gameObject.GetComponent<Creature>();
-        if (creature != null)
+        SoftCollisions softCollisions = collision.gameObject.GetComponent<SoftCollisions>();
+        if (softCollisions != null)
         {
-            if (collider.size.x > 0 && collider.size.y > 0)
+            if (collider.size.x > minSize && collider.size.y > minSize)
             {
                 collider.size = new Vector2(collider.size.x - Time.deltaTime, collider.size.y - Time.deltaTime);
                 collisionTimer = maxCollisionTimer;

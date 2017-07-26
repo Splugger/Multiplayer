@@ -43,7 +43,7 @@ public class WeaponControl : MonoBehaviour
     {
         weapons.Remove(weapon);
         //create dropped object on floor
-        GameObject obj = Instantiate(Resources.Load("WeaponObject") as GameObject);
+        GameObject obj = Instantiate(Resources.Load("Item_Weapon") as GameObject);
         obj.name = weapon.GetType().ToString();
         obj.transform.position = transform.position;
         //add weapon to dropped object

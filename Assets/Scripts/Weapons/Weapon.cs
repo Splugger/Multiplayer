@@ -59,7 +59,7 @@ public class Weapon : MonoBehaviour
         spriteRenderer.sortingOrder = 3;
         spriteRenderer.color = color;
 
-        control.ResetWeaponPositions();
+        if (control != null) control.ResetWeaponPositions();
     }
 
     // Update is called once per frame
@@ -130,6 +130,6 @@ public class Weapon : MonoBehaviour
 
     public virtual void SetSprite()
     {
-        if (sprite != null) spriteRenderer.sprite = sprite;
+        if (spriteRenderer != null && sprite != null) spriteRenderer.sprite = sprite;
     }
 }

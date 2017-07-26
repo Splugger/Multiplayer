@@ -44,6 +44,9 @@ public class CameraFollowPlayers : MonoBehaviour
 
         for (int i = 0; i < Game.control.playerObjs.Count; i++)
         {
+            //calculate midpoint
+
+            // add nearby enemies
             foreach (GameObject obj in FindNearbyEnemies())
             {
                 playerPositionsX.Add(obj.transform.position.x);

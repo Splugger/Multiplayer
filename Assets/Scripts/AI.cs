@@ -47,7 +47,18 @@ public class AI : Creature {
         }
     }
 
-    IEnumerator TargetSearch()
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        ShieldBehavior shield = collision.GetComponent<ShieldBehavior>();
+        if (shield != null)
+        {
+            Creature creature = collision.GetComponentInParent<Creature>();
+            if (creature != null)
+                Damage(0, shield.transform.up * 20f);
+        }
+    }
+
+        IEnumerator TargetSearch()
     {
         while (gameObject.activeInHierarchy)
         {

@@ -57,6 +57,8 @@ public class Player : Creature
 
     public override void Die()
     {
+        Game.control.playerObjs.Remove(gameObject);
+
         base.Die();
     }
 

@@ -8,7 +8,8 @@ public class RenderAtResolution : MonoBehaviour
     public int resolution = 256;
 
     RenderTexture view;
-    Transform viewDisplay;
+    GameObject viewDisplay;
+    RawImage image;
     Camera camera;
     float aspectRatio;
 
@@ -22,6 +23,28 @@ public class RenderAtResolution : MonoBehaviour
         screenHeight = Screen.height;
 
         camera = GetComponent<Camera>();
+
+        //create viewDisplay
+        GameObject canvasObj = new GameObject();
+        canvasObj.name = "Canvas";
+        Canvas canvas = canvasObj.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        RectTransform canvasTransform = canvas.GetComponent<RectTransform>();
+        canvasTransform.anchorMin = Vector2.zero;
+        canvasTransform.anchorMax = Vector2.one;
+        canvasTransform.position = Vector2.zero;
+        canvasTransform.sizeDelta = Vector2.zero;
+
+        viewDisplay = new GameObject();
+        viewDisplay.name = "View";
+        viewDisplay.transform.parent = canvasObj.transform;
+        image = viewDisplay.AddComponent<RawImage>();
+        RectTransform imageTransform = image.GetComponent<RectTransform>();
+        imageTransform.anchorMin = Vector2.zero;
+        imageTransform.anchorMax = Vector2.one;
+        imageTransform.position = Vector2.zero;
+        imageTransform.sizeDelta = Vector2.zero;
+
         CreateView(resolution);
     }
 
@@ -29,7 +52,7 @@ public class RenderAtResolution : MonoBehaviour
     void Update()
     {
         //this GetComponent call is important
-        viewDisplay.GetComponent<RawImage>().texture = view;
+        image.texture = view;
         if (screenHeight != Screen.height || screenWidth != Screen.width)
         {
             CreateView(resolution);
@@ -38,7 +61,6 @@ public class RenderAtResolution : MonoBehaviour
 
     public void CreateView(int resolution)
     {
-        viewDisplay = GameObject.Find("Canvas").transform.FindDeepChild("View");
         aspectRatio = screenWidth / screenHeight;
 
         view = new RenderTexture((int)(aspectRatio * resolution), resolution, 24, RenderTextureFormat.ARGB32);
