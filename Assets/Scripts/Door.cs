@@ -32,7 +32,17 @@ public class Door : MonoBehaviour
 
     private void Open()
     {
+        GameObject audioObj = Instantiate(Resources.Load("AudioPlayer") as GameObject);
+        audioObj.transform.position = transform.position;
+        AudioSource source = audioObj.GetComponent<AudioSource>();
+        source.clip = Resources.Load("Sound_Door") as AudioClip;
+        source.Play();
         gameObject.SetActive(false);
+    }
+
+    private void Close()
+    {
+        gameObject.SetActive(true);
     }
 
     public void SetAppearance()

@@ -155,6 +155,7 @@ MonoBehaviour:
   levelColor: {r: 1, g: 1, b: 1, a: 1}
   wallColor: {r: 1, g: 1, b: 1, a: 1}
   wallName: 
+  gridSize: 0.16
   floorTiles: []
   collider: {fileID: 0}
 --- !u!4 &123858480
@@ -238,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22effae14f6c8ee40a4d446549e92527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
+  debug: 0
   camObj: {fileID: 0}
   screenShake: {fileID: 0}
   levelGenerator: {fileID: 0}

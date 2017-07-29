@@ -35,7 +35,7 @@ public class LevelGenerator : MonoBehaviour
     List<Room> rooms = new List<Room>();
     bool[] roomConnected;
 
-    float gridSize = 0.16f;
+    public float gridSize = 0.16f;
     int numRoomAttempts;
     public TileType[,] tileMap;
     public List<GameObject> floorTiles = new List<GameObject>();
@@ -180,84 +180,13 @@ public class LevelGenerator : MonoBehaviour
 
     void DrawMap()
     {
-        List<GameObject> wallTiles = new List<GameObject>();
         for (int x = 0; x < mapWidth; x++)
         {
             for (int y = 0; y < mapHeight; y++)
             {
-                GameObject tileObj = null;
-                string tileName = null;
-                TileType type = tileMap[x, y];
-                switch (type)
-                {
-                    case TileType.wall:
-                        tileName = "Wall";
-                        break;
-                    case TileType.floor:
-                        tileName = "Floor";
-                        break;
-                    case TileType.trap:
-                        tileName = "Trap";
-                        break;
-                    case TileType.stairs:
-                        tileName = "Stairs";
-                        break;
-                    case TileType.door:
-                        tileName = "Door";
-                        break;
-                }
-
-                //spawn floor tiles in all positions
-                GameObject floor = Instantiate(Resources.Load("Tile_Floor") as GameObject);
-                floor.transform.position = new Vector2(x * gridSize, y * gridSize);
-                floor.transform.parent = transform;
-                SpriteRenderer floorSprite = floor.GetComponent<SpriteRenderer>();
-                floorSprite.color = levelColor;
-
-                //add floor tile to list of floor tiles
-                floorTiles.Add(floor);
-
-                tileObj = Instantiate(Resources.Load("Tile_" + tileName) as GameObject);
-                tileObj.transform.position = new Vector2(x * gridSize, y * gridSize);
-                tileObj.transform.parent = transform;
-
-                if (tileObj != null)
-                {
-                    //add to list of tiles
-                    Tile tile = new Tile(x, y, type, tileObj);
-                    tiles.Add(tile);
-
-                    SpriteRenderer sprite = tileObj.GetComponent<SpriteRenderer>();
-                    if (tileName != "Wall")
-                    {
-                        if (tileName == "Trap")
-                        {
-                            tileObj.GetComponent<Trap>().tile = tile;
-                        }
-                        if (tileName == "Door")
-                        {
-                            Door door = tileObj.GetComponent<Door>();
-                            door.tile = tile;
-                            door.SetAppearance();
-                        }
-                        if (tileName == "Door" || tileName == "Stairs")
-                        {
-                            sprite.color = wallColor;
-                        }
-                        else
-                        {
-                            sprite.color = levelColor;
-                        }
-                        tile.SetSpriteProperties();
-                    }
-                    else
-                    {
-                        WallAppearance appearance = tileObj.GetComponent<WallAppearance>();
-                        appearance.tile = tile;
-                        appearance.texture = "Wall_" + wallName;
-                        sprite.color = wallColor;
-                    }
-                }
+                Tile tile = new Tile(x, y, tileMap[x, y]);
+                tiles.Add(tile);
+                tile.SpawnTile();
             }
         }
     }

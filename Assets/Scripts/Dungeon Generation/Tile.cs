@@ -28,14 +28,11 @@ public class Tile
 
     bool visible;
 
-    public Tile(int x, int y, TileType type, GameObject tileObj)
+    public Tile(int x, int y, TileType type)
     {
         this.x = x;
         this.y = y;
         this.type = type;
-        this.tileObj = tileObj;
-
-        Init();
     }
 
     void Init()
@@ -140,14 +137,89 @@ public class Tile
 
     public void ReplaceTile()
     {
-        GameObject newTileObj = GameObject.Instantiate(Resources.Load("Tile_Floor") as GameObject);
-        newTileObj.transform.position = tileObj.transform.position;
-
+        SpawnTile();
         type = TileType.floor;
 
-        spriteRenderer = newTileObj.GetComponent<SpriteRenderer>();
+        spriteRenderer = tileObj.GetComponent<SpriteRenderer>();
         spriteRenderer.color = Game.control.levelGenerator.levelColor;
 
         GameObject.Destroy(tileObj);
+    }
+
+    public void SpawnTile()
+    {
+        int mapWidth = Game.control.levelGenerator.mapWidth;
+        int mapHeight = Game.control.levelGenerator.mapHeight;
+        Color levelColor = Game.control.levelGenerator.levelColor;
+        Color wallColor = Game.control.levelGenerator.wallColor;
+        float gridSize = Game.control.levelGenerator.gridSize;
+        Transform transform = Game.control.levelGenerator.transform;
+        string wallName = Game.control.levelGenerator.wallName;
+        string tileName = null;
+
+        switch (type)
+        {
+            case TileType.wall:
+                tileName = "Wall";
+                break;
+            case TileType.floor:
+                tileName = "Floor";
+                break;
+            case TileType.trap:
+                tileName = "Trap";
+                break;
+            case TileType.stairs:
+                tileName = "Stairs";
+                break;
+            case TileType.door:
+                tileName = "Door";
+                break;
+        }
+
+        //spawn floor tiles in all positions
+        GameObject floor = GameObject.Instantiate(Resources.Load("Tile_Floor") as GameObject);
+        floor.transform.position = new Vector2(x * gridSize, y * gridSize);
+        floor.transform.parent = transform;
+        SpriteRenderer floorSprite = floor.GetComponent<SpriteRenderer>();
+        floorSprite.color = levelColor;
+
+        //add floor tile to list of floor tiles
+        Game.control.levelGenerator.floorTiles.Add(floor);
+
+        tileObj = GameObject.Instantiate(Resources.Load("Tile_" + tileName) as GameObject);
+        tileObj.transform.position = new Vector2(x * gridSize, y * gridSize);
+        tileObj.transform.parent = transform;
+
+        spriteRenderer = tileObj.GetComponent<SpriteRenderer>();
+        if (tileName != "Wall")
+        {
+            if (tileName == "Trap")
+            {
+                tileObj.GetComponent<Trap>().tile = this;
+            }
+            if (tileName == "Door")
+            {
+                Door door = tileObj.GetComponent<Door>();
+                door.tile = this;
+                door.SetAppearance();
+            }
+            if (tileName == "Door" || tileName == "Stairs")
+            {
+                spriteRenderer.color = wallColor;
+            }
+            else
+            {
+                spriteRenderer.color = levelColor;
+            }
+            SetSpriteProperties();
+        }
+        else
+        {
+            WallAppearance appearance = tileObj.GetComponent<WallAppearance>();
+            appearance.tile = this;
+            appearance.texture = "Wall_" + wallName;
+            spriteRenderer.color = wallColor;
+        }
+        Init();
     }
 }
