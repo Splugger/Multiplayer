@@ -11,6 +11,8 @@ public class Trap : MonoBehaviour
     public MindControlType controlType;
     public float mindControlDuration = 5f;
 
+    public Tile tile;
+
     SpriteRenderer sprite;
 
     // Use this for initialization
@@ -53,10 +55,6 @@ public class Trap : MonoBehaviour
         explosion.damage = 0;
         explosion.knockback = 0;
         effect.transform.position = creature.transform.position;
-        GameObject newTile = Instantiate(Resources.Load("Tile_Floor") as GameObject);
-        newTile.transform.position = transform.position;
-        SpriteRenderer sprite = newTile.GetComponent<SpriteRenderer>();
-        sprite.color = Game.control.levelGenerator.levelColor;
-        Destroy(gameObject);
+        tile.ReplaceTile();
     }
 }

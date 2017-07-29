@@ -144,7 +144,7 @@ public static class ExtensionMethods
         float s;
         float v;
         Color.RGBToHSV(color, out h, out s, out v);
-        h -= 0.5f;
+        h = Mathf.Abs(h - 0.5f);
         Color compliment = Color.HSVToRGB(h, s, v);
         return compliment;
     }

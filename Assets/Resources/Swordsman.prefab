@@ -26,7 +26,6 @@ GameObject:
   - component: {fileID: 95169465397281094}
   - component: {fileID: 61569422134219980}
   - component: {fileID: 114288507573841902}
-  - component: {fileID: 114324980086014190}
   m_Layer: 0
   m_Name: Swordsman
   m_TagString: Enemy
@@ -137,22 +136,12 @@ MonoBehaviour:
   normalAim: {x: 0, y: 0, z: 0}
   source: {fileID: 0}
   spriteTransform: {fileID: 0}
+  spriteRenderer: {fileID: 0}
   sprite: {fileID: 0}
   color: {r: 0, g: 0, b: 0, a: 0}
   control: {fileID: 0}
   staminaCost: 10
   slashWidth: 0
---- !u!114 &114324980086014190
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1010085091703090}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09b3b8859aa5b644cb66212d42aacdb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114800095642804400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -175,7 +164,6 @@ MonoBehaviour:
   canDamage: 1
   moveSpeed: 1
   acceleration: 5
-  maxSpeed: 100
   desiredTranslation: {x: 0, y: 0}
   rb: {fileID: 0}
   sprite: {fileID: 0}
@@ -189,6 +177,7 @@ MonoBehaviour:
   moveTimer: 1
   maxMoveTimer: 1
   searchRate: 0.1
+  level: 1
 --- !u!114 &114944444057569268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -203,7 +192,7 @@ MonoBehaviour:
   weapons: []
   primary: {fileID: 0}
   secondary: {fileID: 0}
-  thrown: {fileID: 0}
+  special: {fileID: 0}
   creature: {fileID: 0}
 --- !u!212 &212851930003957214
 SpriteRenderer:

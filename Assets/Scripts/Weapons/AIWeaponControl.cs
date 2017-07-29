@@ -12,6 +12,12 @@ public class AIWeaponControl : WeaponControl
     public override void Start()
     {
         ai = GetComponent<AI>();
+
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            weapons[i] = Game.control.GenerateRandomWeapon(weapons[i], ai.level);
+        }
+
         base.Start();
     }
 

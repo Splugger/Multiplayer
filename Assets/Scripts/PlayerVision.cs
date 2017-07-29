@@ -17,25 +17,21 @@ public class PlayerVision : MonoBehaviour
     public void Start()
     {
         wallsMask = LayerMask.GetMask("Walls");
-        InvokeRepeating("CalculateVision", 0f, 0.5f);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        InvokeRepeating("CalculateVision", 0f, 0.1f);
     }
 
     public void CalculateVision()
     {
         //calculate player vision
-        foreach (GameObject playerObj in Game.control.playerObjs)
+        List<GameObject> playerObjs = Game.control.playerObjs;
+        foreach (Tile tile in Game.control.levelGenerator.tiles)
         {
-            foreach (Tile tile in Game.control.levelGenerator.tiles)
+            tile.SetVisible(false);
+            for (int i = 0; i < playerObjs.Count; i++)
             {
                 if (tile.tileObj != null)
                 {
-                    Vector3 playerPos = playerObj.transform.position;
+                    Vector3 playerPos = playerObjs[i].transform.position;
                     Vector3 tilePos = tile.tileObj.transform.position;
                     float distance = (playerPos - tilePos).sqrMagnitude;
                     if (distance < playerViewDist)
@@ -46,11 +42,7 @@ public class PlayerVision : MonoBehaviour
                         {
                             Bounds checkBox = new Bounds(tile.tileObj.transform.position, Vector3.one * wallRevealDist);
                             //disable tile at current search position if the hit tile is not the tile you're looking for
-                            if (!(checkBox.Contains(hit.point)))
-                            {
-                                tile.SetVisible(false);
-                            }
-                            else
+                            if ((checkBox.Contains(hit.point)))
                             {
                                 tile.SetVisible(true);
                             }
@@ -59,10 +51,6 @@ public class PlayerVision : MonoBehaviour
                         {
                             tile.SetVisible(true);
                         }
-                    }
-                    else
-                    {
-                        tile.SetVisible(false);
                     }
                 }
             }

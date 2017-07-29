@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Creature : MonoBehaviour {
+public class Creature : MonoBehaviour
+{
 
     public float health = 100f;
     public float maxHealth = 100f;
@@ -41,7 +42,8 @@ public class Creature : MonoBehaviour {
     public float vertical;
 
     // Use this for initialization
-    public virtual void Start () {
+    public virtual void Start()
+    {
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
@@ -54,7 +56,7 @@ public class Creature : MonoBehaviour {
     }
 
     // Update is called once per frame
-    public virtual void Update ()
+    public virtual void Update()
     {
         if (dead)
         {
@@ -156,6 +158,7 @@ public class Creature : MonoBehaviour {
     {
         anim.SetTrigger("Dead");
         dead = true;
+        gameObject.layer = LayerMask.NameToLayer("IgnoreBullets");
     }
 
     public virtual void UseStamina(float amount)
@@ -184,4 +187,5 @@ public class Creature : MonoBehaviour {
         yield return new WaitForSeconds(time);
         sprite.color = color;
     }
+
 }

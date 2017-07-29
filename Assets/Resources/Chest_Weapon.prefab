@@ -23,8 +23,7 @@ GameObject:
   - component: {fileID: 61660123445630220}
   - component: {fileID: 114635274787442698}
   - component: {fileID: 50464621530298778}
-  - component: {fileID: 114120583779739270}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Chest_Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +79,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 0.32, y: 0.16}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -89,17 +88,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16, y: 0.16}
   m_EdgeRadius: 0
---- !u!114 &114120583779739270
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1183851042450538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09b3b8859aa5b644cb66212d42aacdb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114635274787442698
 MonoBehaviour:
   m_ObjectHideFlags: 1

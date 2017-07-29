@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum TileType { wall, floor, trap, stairs }
+public enum TileType { wall, floor, trap, stairs, door }
 
 public class LevelGenerator : MonoBehaviour
 {
 
-    public int minNumRooms = 3;
-    public int maxNumRooms = 6;
+    public int minNumRoomAttempts = 3;
+    public int maxNumRoomAttempts = 6;
     public int minRoomSize = 5;
     public int maxRoomSize = 30;
     public int mapWidth = 100;
@@ -20,6 +20,7 @@ public class LevelGenerator : MonoBehaviour
     public int numWalkers = 10;
     public int numSwordsmen = 6;
     public int numGunners = 3;
+    public bool spawnEnemies = true;
 
     public int numPickupChests = 5;
     public int numWeaponChests = 2;
@@ -29,11 +30,13 @@ public class LevelGenerator : MonoBehaviour
     public Color levelColor = Color.white;
     public Color wallColor = Color.white;
 
+    public string wallName;
+
     List<Room> rooms = new List<Room>();
     bool[] roomConnected;
 
     float gridSize = 0.16f;
-    int numRooms;
+    int numRoomAttempts;
     public TileType[,] tileMap;
     public List<GameObject> floorTiles = new List<GameObject>();
     public List<Tile> tiles = new List<Tile>();
@@ -59,10 +62,20 @@ public class LevelGenerator : MonoBehaviour
                 break;
         }
 
+        switch (Random.Range(0, 2))
+        {
+            case 0:
+                wallName = "Bricks";
+                break;
+            case 1:
+                wallName = "Cobblestone";
+                break;
+        }
+
         tileMap = new TileType[mapWidth, mapHeight];
 
-        numRooms = Random.Range(minNumRooms, maxNumRooms);
-        for (int i = 0; i < numRooms; i++)
+        numRoomAttempts = Random.Range(minNumRoomAttempts, maxNumRoomAttempts);
+        for (int i = 0; i < numRoomAttempts; i++)
         {
             GenerateRoom();
         }
@@ -85,9 +98,12 @@ public class LevelGenerator : MonoBehaviour
         collider.GenerateGeometry();
 
         //spawn resources
-        SpawnOnMap(numWalkers, "Walker");
-        SpawnOnMap(numGunners, "Gunner");
-        SpawnOnMap(numSwordsmen, "Swordsman");
+        if (spawnEnemies)
+        {
+            SpawnOnMap(numWalkers, "Walker");
+            SpawnOnMap(numGunners, "Gunner");
+            SpawnOnMap(numSwordsmen, "Swordsman");
+        }
         SpawnOnMap(numPickupChests, "Chest_Pickup");
         SpawnOnMap(numWeaponChests, "Chest_Weapon");
         SpawnOnMap(numAmmoDrops, "Item_Ammo");
@@ -130,9 +146,10 @@ public class LevelGenerator : MonoBehaviour
             if (obj.tag == "Enemy")
             {
                 AI ai = obj.GetComponent<AI>();
-                ai.maxHealth = Random.Range(10f, 100f);
+                ai.level = Random.Range(1, Game.control.floorNumber);
+                ai.maxHealth = Random.Range(5f, 15f) * ai.level;
                 ai.health = ai.maxHealth;
-                ai.moveSpeed = Random.Range(0.5f, 2f);
+                ai.moveSpeed = Random.Range(0.3f, 1.5f) * ai.level;
             }
         }
     }
@@ -144,11 +161,8 @@ public class LevelGenerator : MonoBehaviour
         Vector2 position = RandomMapPoint(0);
         Room room = new Room((int)position.x, (int)position.y, width, height);
 
-        /*if (RoomIsOverlapping(room))
-        {
-            print("RoomIsOverlapping");
-            GenerateRoom();
-        }*/
+        //don't create this room if it's overlapping another room
+        if (RoomIsOverlapping(room)) return;
 
         rooms.Add(room);
 
@@ -188,6 +202,9 @@ public class LevelGenerator : MonoBehaviour
                     case TileType.stairs:
                         tileName = "Stairs";
                         break;
+                    case TileType.door:
+                        tileName = "Door";
+                        break;
                 }
 
                 //spawn floor tiles in all positions
@@ -213,11 +230,31 @@ public class LevelGenerator : MonoBehaviour
                     SpriteRenderer sprite = tileObj.GetComponent<SpriteRenderer>();
                     if (tileName != "Wall")
                     {
-                        tile.color = levelColor;
+                        if (tileName == "Trap")
+                        {
+                            tileObj.GetComponent<Trap>().tile = tile;
+                        }
+                        if (tileName == "Door")
+                        {
+                            Door door = tileObj.GetComponent<Door>();
+                            door.tile = tile;
+                            door.SetAppearance();
+                        }
+                        if (tileName == "Door" || tileName == "Stairs")
+                        {
+                            sprite.color = wallColor;
+                        }
+                        else
+                        {
+                            sprite.color = levelColor;
+                        }
+                        tile.SetSpriteProperties();
                     }
                     else
                     {
-                        tileObj.GetComponent<WallAppearance>().tile = tile;
+                        WallAppearance appearance = tileObj.GetComponent<WallAppearance>();
+                        appearance.tile = tile;
+                        appearance.texture = "Wall_" + wallName;
                         sprite.color = wallColor;
                     }
                 }
@@ -244,7 +281,7 @@ public class LevelGenerator : MonoBehaviour
     void GenerateHallways()
     {
         roomConnected = new bool[rooms.Count];
-        for (int i = 0; i < numRooms; i++)
+        for (int i = 0; i < rooms.Count; i++)
         {
             //find position of room
             int x1 = rooms[i].x;
@@ -256,7 +293,7 @@ public class LevelGenerator : MonoBehaviour
             int closestRoomIndex = 0;
 
             //look through all rooms
-            for (int r = 0; r < numRooms - 1; r++)
+            for (int r = 0; r < rooms.Count - 1; r++)
             {
                 int x = rooms[r].x;
                 int y = rooms[r].y;
@@ -278,48 +315,77 @@ public class LevelGenerator : MonoBehaviour
             roomConnected[i] = true;
             roomConnected[closestRoomIndex] = true;
 
-            //calculate hallway positions
-            int hallY1 = Random.Range(y1 + 1, y1 + h1 - 1);
-            int hallY2 = Random.Range(y2 + 1, y2 + h2 - 1);
-            int midX = Random.Range(x1 + (w1 / 2), x2 + (w2 / 2));
-
-            //generate horizontal hallway
-            if (x1 != x2)
+            if (Mathf.Abs(x1 - x2) > Mathf.Abs(y1 - y2))
             {
-                int startX = x1 + (w1 / 2);
-                int endX = x2 + (w2 / 2);
-                int startY = hallY1;
-                int endY = hallY2;
-                //switch to go from smaller to larger
-                if (endX < startX)
-                {
-                    int temp = endX;
-                    endX = startX;
-                    startX = temp;
+                //tunnel horizontally
+                Tunnel(x1, y1, w1, h1, x2, y2, w2, h2);
+            }
+            else
+            {
+                //tunnel vertically
+                Tunnel(x2, y2, w2, h2, x1, y1, w1, h1);
+            }
+        }
+    }
 
-                    temp = endY;
-                    endY = startY;
-                    startY = temp;
+    void Tunnel(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2)
+    {
+        //calculate hallway positions
+        int hallY1 = Random.Range(y1 + 1, y1 + h1 - 1);
+        int hallY2 = Random.Range(y2 + 1, y2 + h2 - 1);
+        int midX = 0;
+
+        //generate horizontal hallway
+        if (x1 != x2)
+        {
+            int startX = 0;
+            int endX = 0;
+            int startY = 0;
+            int endY = 0;
+
+            //go from lower x and y to higher x and y
+            if (x1 < x2)
+            {
+                startX = x1 + w1;
+                endX = x2;
+                midX = Random.Range(x1 + w1, x2);
+                startY = hallY1;
+                endY = hallY2;
+            }
+            else
+            {
+                startX = x2 + w2;
+                endX = x1;
+                midX = Random.Range(x2 + w2, x1);
+                startY = hallY2;
+                endY = hallY1;
+            }
+
+            for (int pathX = startX; pathX <= endX; pathX++)
+            {
+                int pathY = startY;
+                if (pathX >= midX) pathY = endY;
+
+                if (pathX == startX || pathX == endX)
+                {
+                    tileMap[pathX, pathY] = TileType.door;
                 }
-                for (int pathX = startX; pathX <= endX; pathX++)
+                else
                 {
-                    int pathY = startY;
-                    if (pathX >= midX) pathY = endY;
-
                     tileMap[pathX, pathY] = RandomTileType();
                     if (doubleHallwayWidth) tileMap[pathX, pathY - 1] = RandomTileType();
                 }
             }
+        }
 
-            //connect vertically
-            int minHallY = Mathf.Min(hallY1, hallY2);
-            int maxHallY = Mathf.Max(hallY1, hallY2);
+        //connect vertically
+        int minHallY = Mathf.Min(hallY1, hallY2);
+        int maxHallY = Mathf.Max(hallY1, hallY2);
 
-            for (int pathVertical = minHallY; pathVertical <= maxHallY; pathVertical++)
-            {
-                tileMap[midX, pathVertical] = RandomTileType();
-                if (doubleHallwayWidth) tileMap[midX + 1, pathVertical] = RandomTileType();
-            }
+        for (int pathVertical = minHallY; pathVertical <= maxHallY; pathVertical++)
+        {
+            tileMap[midX, pathVertical] = RandomTileType();
+            if (doubleHallwayWidth) tileMap[midX + 1, pathVertical] = RandomTileType();
         }
     }
 
@@ -355,9 +421,12 @@ public class LevelGenerator : MonoBehaviour
             {
                 if (x != 0 && y != 0 && x != mapWidth && y != mapHeight)
                 {
-                    if (tileMap[x, y] == TileType.floor)
+                    if (x >= 0 && x < mapWidth && y >= 0 && y < mapHeight)
                     {
-                        return true;
+                        if (tileMap[x, y] == TileType.floor)
+                        {
+                            return true;
+                        }
                     }
                 }
             }

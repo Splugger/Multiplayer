@@ -137,22 +137,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5506d6cc2dca8e8428c555abd0164207, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minNumRooms: 4
-  maxNumRooms: 6
-  minRoomSize: 4
+  minNumRoomAttempts: 8
+  maxNumRoomAttempts: 8
+  minRoomSize: 6
   maxRoomSize: 20
   mapWidth: 100
   mapHeight: 100
-  doubleHallwayWidth: 1
+  doubleHallwayWidth: 0
   numWalkers: 8
   numSwordsmen: 3
   numGunners: 3
+  spawnEnemies: 0
   numPickupChests: 4
   numWeaponChests: 3
   numAmmoDrops: 5
   numMedkitDrops: 5
   levelColor: {r: 1, g: 1, b: 1, a: 1}
   wallColor: {r: 1, g: 1, b: 1, a: 1}
+  wallName: 
   floorTiles: []
   collider: {fileID: 0}
 --- !u!4 &123858480
@@ -166,7 +168,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!66 &123858481
 CompositeCollider2D:
@@ -236,10 +238,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22effae14f6c8ee40a4d446549e92527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 1
   camObj: {fileID: 0}
   screenShake: {fileID: 0}
   levelGenerator: {fileID: 0}
   playerObjs: []
+  floorNumber: 0
+  memoryColorOffset: {r: 0.1, g: 0.1, b: 0.1, a: 0}
 --- !u!4 &232720634
 Transform:
   m_ObjectHideFlags: 0
@@ -264,7 +269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5c86b6b537f8e4cb21ef6f85ee9711, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerViewDist: 3
+  playerViewDist: 2
+  wallRevealDist: 0.3
 --- !u!1001 &325683730
 Prefab:
   m_ObjectHideFlags: 0
@@ -417,6 +423,11 @@ Prefab:
       propertyPath: startEquipment
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 223340022629504786, guid: b332f4567023a48499b0f351dbfa493e,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
   m_IsPrefabParent: 0
@@ -502,6 +513,11 @@ Prefab:
         type: 2}
       propertyPath: startEquipment
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 223340022629504786, guid: b332f4567023a48499b0f351dbfa493e,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b332f4567023a48499b0f351dbfa493e, type: 2}
@@ -658,3 +674,45 @@ MonoBehaviour:
   retroSnap: 1
   assetsPixelsPerUnit: 100
   showHUD: 0
+--- !u!1 &2140925803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2140925805}
+  - component: {fileID: 2140925804}
+  m_Layer: 0
+  m_Name: Player Vision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2140925804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2140925803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5c86b6b537f8e4cb21ef6f85ee9711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerViewDist: 3
+  wallRevealDist: 0.3
+--- !u!4 &2140925805
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2140925803}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.8529727, y: 2.2112787, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

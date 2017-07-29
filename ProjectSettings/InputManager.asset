@@ -147,10 +147,10 @@ InputManager:
     snap: 0
     invert: 0
     type: 0
-    axis: 0
+    axis: 8
     joyNum: 1
   - serializedVersion: 3
-    m_Name: Player 1 Pick Up
+    m_Name: Player 1 Interact
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -195,10 +195,10 @@ InputManager:
     snap: 0
     invert: 0
     type: 0
-    axis: 0
+    axis: 9
     joyNum: 1
   - serializedVersion: 3
-    m_Name: Player 1 Grenade
+    m_Name: Player 1 Special
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -243,10 +243,10 @@ InputManager:
     snap: 0
     invert: 0
     type: 0
-    axis: 0
+    axis: 8
     joyNum: 2
   - serializedVersion: 3
-    m_Name: Player 2 Pick Up
+    m_Name: Player 2 Interact
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
@@ -291,10 +291,10 @@ InputManager:
     snap: 0
     invert: 0
     type: 0
-    axis: 0
+    axis: 9
     joyNum: 2
   - serializedVersion: 3
-    m_Name: Player 2 Grenade
+    m_Name: Player 2 Special
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 

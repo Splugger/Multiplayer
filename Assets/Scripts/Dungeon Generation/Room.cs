@@ -17,14 +17,4 @@ public class Room {
         this.w = w;
         this.h = h;
     }
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

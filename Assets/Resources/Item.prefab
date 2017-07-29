@@ -20,11 +20,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4268966773329060}
   - component: {fileID: 61478892791638268}
-  - component: {fileID: 114882034622521970}
-  - component: {fileID: 114774805338105624}
   - component: {fileID: 50816919656251184}
-  m_Layer: 11
-  m_Name: Item_Weapon
+  - component: {fileID: 114955668058541718}
+  m_Layer: 0
+  m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +87,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.02}
   m_EdgeRadius: 0
---- !u!114 &114774805338105624
+--- !u!114 &114955668058541718
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -96,23 +95,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1708749006912680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93609b344afd2654495ef9c3f35a9fb1, type: 3}
+  m_Script: {fileID: 11500000, guid: e5c97c56e35247b4283f3e03c59deb0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapons: []
-  primary: {fileID: 0}
-  secondary: {fileID: 0}
-  special: {fileID: 0}
-  creature: {fileID: 0}
---- !u!114 &114882034622521970
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1708749006912680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21a57d4005cd53949956e0f2809f5bad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapon: {fileID: 0}

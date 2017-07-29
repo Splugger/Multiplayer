@@ -9,7 +9,7 @@ public class WeaponControl : MonoBehaviour
     public List<Weapon> weapons;
     public Weapon primary;
     public Weapon secondary;
-    public Weapon thrown;
+    public Weapon special;
     public Creature creature;
 
     // Use this for initialization
@@ -19,7 +19,7 @@ public class WeaponControl : MonoBehaviour
         {
             for (int i = 0; i < weapons.Count; i++)
             {
-                weapons[i] = Game.control.GenerateRandomWeapon(weapons[i]);
+                weapons[i] = Game.control.GenerateRandomWeapon(weapons[i], 1);
 
                 if (weapons[i].spriteRenderer != null)
                 {
@@ -57,7 +57,7 @@ public class WeaponControl : MonoBehaviour
     {
         if (weapons.Any(q => q is Grenade))
         {
-            thrown = weapons.OfType<Grenade>().ToList()[0];
+            special = weapons.OfType<Grenade>().ToList()[0];
         }
         if (weapons.Count > 0)
         {

@@ -1,23 +1,23 @@
 fileFormatVersion: 2
-guid: d568971c0cc05474e8a22b8dfd07a53b
-timeCreated: 1501255980
+guid: fbafcc043be4cf545a0fd9897342ef1e
+timeCreated: 1501256682
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Wall_Cobblestone_0
-    21300002: Wall_Cobblestone_1
-    21300004: Wall_Cobblestone_2
-    21300006: Wall_Cobblestone_3
-    21300008: Wall_Cobblestone_4
-    21300010: Wall_Cobblestone_5
-    21300012: Wall_Cobblestone_6
-    21300014: Wall_Cobblestone_7
-    21300016: Wall_Cobblestone_8
-    21300018: Wall_Cobblestone_9
-    21300020: Wall_Cobblestone_10
-    21300022: Wall_Cobblestone_11
-    21300024: Wall_Cobblestone_12
-    21300026: Wall_Cobblestone_13
+    21300000: Wall_Bricks_0
+    21300002: Wall_Bricks_1
+    21300004: Wall_Bricks_2
+    21300006: Wall_Bricks_3
+    21300008: Wall_Bricks_4
+    21300010: Wall_Bricks_5
+    21300012: Wall_Bricks_6
+    21300014: Wall_Bricks_7
+    21300016: Wall_Bricks_8
+    21300018: Wall_Bricks_9
+    21300020: Wall_Bricks_10
+    21300022: Wall_Bricks_11
+    21300024: Wall_Bricks_12
+    21300026: Wall_Bricks_13
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -89,7 +89,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Wall_Cobblestone_0
+      name: Wall_Bricks_0
       rect:
         serializedVersion: 2
         x: 0
@@ -103,7 +103,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_1
+      name: Wall_Bricks_1
       rect:
         serializedVersion: 2
         x: 16
@@ -117,7 +117,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_2
+      name: Wall_Bricks_2
       rect:
         serializedVersion: 2
         x: 32
@@ -131,7 +131,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_3
+      name: Wall_Bricks_3
       rect:
         serializedVersion: 2
         x: 0
@@ -145,7 +145,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_4
+      name: Wall_Bricks_4
       rect:
         serializedVersion: 2
         x: 16
@@ -159,7 +159,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_5
+      name: Wall_Bricks_5
       rect:
         serializedVersion: 2
         x: 32
@@ -173,7 +173,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_6
+      name: Wall_Bricks_6
       rect:
         serializedVersion: 2
         x: 0
@@ -187,7 +187,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_7
+      name: Wall_Bricks_7
       rect:
         serializedVersion: 2
         x: 16
@@ -201,7 +201,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_8
+      name: Wall_Bricks_8
       rect:
         serializedVersion: 2
         x: 32
@@ -215,7 +215,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_9
+      name: Wall_Bricks_9
       rect:
         serializedVersion: 2
         x: 0
@@ -229,7 +229,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_10
+      name: Wall_Bricks_10
       rect:
         serializedVersion: 2
         x: 16
@@ -243,7 +243,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_11
+      name: Wall_Bricks_11
       rect:
         serializedVersion: 2
         x: 32
@@ -257,7 +257,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_12
+      name: Wall_Bricks_12
       rect:
         serializedVersion: 2
         x: 0
@@ -271,7 +271,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Wall_Cobblestone_13
+      name: Wall_Bricks_13
       rect:
         serializedVersion: 2
         x: 16

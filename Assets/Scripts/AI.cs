@@ -17,6 +17,8 @@ public class AI : Creature {
 
     public float searchRate = 0.1f;
 
+    public int level = 1;
+
     // Use this for initialization
     public override void Start () {
         base.Start();

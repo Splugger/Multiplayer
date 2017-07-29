@@ -11,6 +11,8 @@ public class Game : MonoBehaviour
 
     public static Game control;
 
+    public bool debug = false;
+
     public GameObject camObj;
     public ScreenShake screenShake;
 
@@ -18,9 +20,9 @@ public class Game : MonoBehaviour
 
     public List<GameObject> playerObjs = new List<GameObject>();
 
-    int levelsCleared = 0;
+    public int floorNumber = 0;
 
-    PlayerVision playerVision;
+    public Color memoryColorOffset = new Color(0.1f, 0.1f, 0.1f, 0f);
 
     // Use this for initialization
     void Awake()
@@ -35,14 +37,9 @@ public class Game : MonoBehaviour
             Destroy(gameObject);
         }
 
-        camObj = GameObject.FindWithTag("MainCamera");
-        screenShake = camObj.GetComponent<ScreenShake>();
+        Init();
 
-        levelGenerator = GameObject.Find("Level Generator").GetComponent<LevelGenerator>();
-
-        playerVision = GetComponent<PlayerVision>();
-
-        if (levelsCleared == 0)
+        if (floorNumber == 0)
         {
             playerObjs = GameObject.FindGameObjectsWithTag("Player").ToList();
 
@@ -51,6 +48,14 @@ public class Game : MonoBehaviour
                 DontDestroyOnLoad(playerObj);
             }
         }
+    }
+
+    public void Init()
+    {
+        camObj = GameObject.FindWithTag("MainCamera");
+        screenShake = camObj.GetComponent<ScreenShake>();
+
+        levelGenerator = GameObject.Find("Level Generator").GetComponent<LevelGenerator>();
     }
 
     public void DestroyExtraPlayers()
@@ -115,10 +120,12 @@ public class Game : MonoBehaviour
                 break;
         }
         itemObj.GetComponent<WeaponObject>().weapon = weapon;
-        weapon = GenerateRandomWeapon(weapon);
+        int weaponLevel = Random.Range(floorNumber - 4, floorNumber);
+        if (weaponLevel < 1) weaponLevel = 1;
+        weapon = GenerateRandomWeapon(weapon, weaponLevel);
     }
 
-    public Weapon GenerateRandomWeapon(Weapon weapon)
+    public Weapon GenerateRandomWeapon(Weapon weapon, int level)
     {
         //set general weapon parameters
         weapon.range = Random.Range(1f, 3f);
@@ -127,30 +134,30 @@ public class Game : MonoBehaviour
         switch (Random.Range(0, 2))
         {
             case 0:
-                weapon.maxCooldown = Random.Range(0.1f, 0.6f);
+                weapon.maxCooldown = Random.Range(0.1f, 0.6f) / level;
                 break;
             case 1:
-                weapon.maxCooldown = Random.Range(0.6f, 2f);
+                weapon.maxCooldown = Random.Range(0.6f, 2f) / level;
                 break;
         }
-        weapon.damage = Random.Range(5f, 20f) * weapon.maxCooldown;
+        weapon.damage = Random.Range(5f, 20f) * weapon.maxCooldown * level;
         //gun
         if (weapon.GetType().IsAssignableFrom(typeof(Gun)))
         {
-            weapon.maxAmmo = (int)(Random.Range(10, 201) * weapon.maxCooldown);
+            weapon.maxAmmo = (int)(Random.Range(10, 201) * weapon.maxCooldown * level);
         }
         //melee
         if (weapon.GetType().IsAssignableFrom(typeof(Melee)))
         {
-            ((Melee)weapon).staminaCost = Random.Range(1f, 3f) * weapon.damage;
-            ((Melee)weapon).slashWidth = Random.Range(1f, 2f);
-            weapon.damage *= 2f;
+            ((Melee)weapon).staminaCost = Random.Range(1f, 3f) * weapon.damage * level;
+            ((Melee)weapon).slashWidth = Random.Range(1f, 2f) * level;
+            weapon.damage *= 1.5f;
         }
         //grenade
         if (weapon.GetType().IsAssignableFrom(typeof(Grenade)))
         {
             ((Grenade)weapon).throwStaminaCost = Random.Range(5f, 10f);
-            weapon.maxAmmo = Random.Range(3, 21);
+            weapon.maxAmmo = Random.Range(3, 21) * level;
             switch (Random.Range(0, 5))
             {
                 case 0:
@@ -164,7 +171,7 @@ public class Game : MonoBehaviour
         //shield
         if (weapon.GetType().IsAssignableFrom(typeof(Shield)))
         {
-            ((Shield)weapon).stability = Random.Range(0.1f, 0.9f);
+            ((Shield)weapon).stability = Random.Range(0.1f, 0.9f) * level;
         }
         weapon.ammo = weapon.maxAmmo;
         weapon.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
@@ -176,9 +183,24 @@ public class Game : MonoBehaviour
 
     public void NewLevel()
     {
-        levelsCleared++;
+        floorNumber++;
         SceneManager.LoadScene("Procedural");
+    }
+
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+    }
+
+    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        Init();
         DestroyExtraPlayers();
-        playerVision.Start();
     }
 }

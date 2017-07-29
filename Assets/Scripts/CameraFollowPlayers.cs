@@ -26,7 +26,7 @@ public class CameraFollowPlayers : MonoBehaviour
         Vector3 player1Pos = Game.control.playerObjs[0].transform.position;
         transform.position = new Vector3(player1Pos.x, player1Pos.y, transform.position.z);
 
-        cam.backgroundColor = Game.control.levelGenerator.wallColor;
+        cam.backgroundColor = Game.control.levelGenerator.wallColor - Game.control.memoryColorOffset;
     }
 
     // Update is called once per frame

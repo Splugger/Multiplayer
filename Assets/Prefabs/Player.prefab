@@ -221,7 +221,6 @@ GameObject:
   - component: {fileID: 114681800402636200}
   - component: {fileID: 95974133627052562}
   - component: {fileID: 61079330801211800}
-  - component: {fileID: 114086008484367076}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -349,17 +348,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114086008484367076
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1602859231102622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09b3b8859aa5b644cb66212d42aacdb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114185572187880964
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -609,8 +597,10 @@ MonoBehaviour:
   weapons: []
   primary: {fileID: 0}
   secondary: {fileID: 0}
-  thrown: {fileID: 0}
+  special: {fileID: 0}
   creature: {fileID: 0}
+  startEquipment: 1
+  startWithGrenade: 1
 --- !u!114 &114723795592652684
 MonoBehaviour:
   m_ObjectHideFlags: 1

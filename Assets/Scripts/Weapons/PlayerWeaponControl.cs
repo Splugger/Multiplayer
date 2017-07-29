@@ -32,7 +32,7 @@ public class PlayerWeaponControl : WeaponControl
         }
         if (startWithGrenade)
         {
-            thrown = gameObject.AddComponent<Grenade>();
+            special = gameObject.AddComponent<Grenade>();
         }
 
         ResetWeaponControls();
@@ -81,7 +81,7 @@ public class PlayerWeaponControl : WeaponControl
         }
 
         //pick up weapon
-        if (Input.GetButtonDown("Player " + player.playerNum + " Pick Up"))
+        if (Input.GetButtonDown("Player " + player.playerNum + " Interact"))
         {
             PickUpWeapon();
         }
@@ -112,7 +112,7 @@ public class PlayerWeaponControl : WeaponControl
                 {
                     if (weaponObj.weapon.GetType().IsAssignableFrom(typeof(Grenade)))
                     {
-                        DropWeapon(thrown);
+                        DropWeapon(special);
                     }
                     else
                     {
@@ -123,7 +123,7 @@ public class PlayerWeaponControl : WeaponControl
                 Destroy(col.gameObject);
                 if (weaponObj.weapon.GetType().IsAssignableFrom(typeof(Grenade)))
                 {
-                    thrown = playerWeapon;
+                    special = playerWeapon;
                 }
                 else
                 {
@@ -158,11 +158,11 @@ public class PlayerWeaponControl : WeaponControl
         if (weapons.Count > 1)
         {
             if (secondary != null) secondary.useButton = "Fire2";
-            if (thrown != null) thrown.useButton = "Grenade";
+            if (special != null) special.useButton = "Special";
         }
         if (weapons.Count > 2)
         {
-            thrown.useButton = "Grenade";
+            special.useButton = "Special";
         }
     }
 }
